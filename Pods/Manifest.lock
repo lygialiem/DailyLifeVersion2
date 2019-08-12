@@ -1,0 +1,38 @@
+PODS:
+  - Alamofire (4.8.2)
+  - SDWebImage (5.1.0):
+    - SDWebImage/Core (= 5.1.0)
+  - SDWebImage/Core (5.1.0)
+  - Socket.IO-Client-Swift (15.1.0):
+    - Starscream (~> 3.1)
+  - Starscream (3.1.0)
+  - SwiftyJSON (5.0.0)
+  - XLPagerTabStrip (8.1.1)
+
+DEPENDENCIES:
+  - Alamofire
+  - SDWebImage (~> 5.0)
+  - Socket.IO-Client-Swift
+  - SwiftyJSON
+  - XLPagerTabStrip (~> 8.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - SDWebImage
+    - Socket.IO-Client-Swift
+    - Starscream
+    - SwiftyJSON
+    - XLPagerTabStrip
+
+SPEC CHECKSUMS:
+  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
+  SDWebImage: fb387001955223213dde14bc08c8b73f371f8d8f
+  Socket.IO-Client-Swift: 7cb44c0ffb86e158cee32d0642d30ec5fdcf8f61
+  Starscream: 08172b481e145289c4930cb567230fb55897cfa4
+  SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
+  XLPagerTabStrip: 63166e21c9844fa30f2d95d30f335e73be5caf22
+
+PODFILE CHECKSUM: 4dd44187094f274dca1a48a6f306eac011c71d68
+
+COCOAPODS: 1.5.2
