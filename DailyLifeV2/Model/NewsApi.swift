@@ -9,23 +9,23 @@
 import Foundation
 
 struct NewsApi: Decodable{
-  let status: String?
-  let totalResults: Int?
-  let articles: [Article]
+  var status: String?
+  var totalResults: Int?
+  var articles: [Article]
 }
 
 struct Article: Decodable{
-  let source: Source?
-  let author: String?
-  let title: String?
-  let description: String?
-  let url: String?
-  let urlToImage: String?
-  let publishedAt: String?
-  let content: String?
+  var source: Source?
+  var author: String?
+  var title: String?
+  var description: String?
+  var url: String?
+  var urlToImage: String?
+  var publishedAt: String?
+  var content: String?
 }
 
 struct Source: Decodable{
-  let id: String?
-  let name: String?
+  var id: String?
+  var name: String?
 }

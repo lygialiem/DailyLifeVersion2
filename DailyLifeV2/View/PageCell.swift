@@ -17,6 +17,10 @@ class PageCell: UICollectionViewCell {
   override func awakeFromNib() {
     super.awakeFromNib()
     
+    imageArticle.clipsToBounds = true
+    imageArticle.layer.cornerRadius = 7
+    imageArticle.layer.borderColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+    imageArticle.layer.borderWidth = 1
     
   }
   
@@ -30,7 +34,6 @@ class PageCell: UICollectionViewCell {
     
     guard let image = image else {return}
     self.imageArticle.sd_setImage(with: URL(string: image))
-    
     
   }
 }

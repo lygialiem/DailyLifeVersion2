@@ -15,28 +15,24 @@ class SideMenuVC: UIViewController {
     super.viewDidLoad()
     
     configureMenuCollectionView()
-    closeSideMenuByPanEdge()
-    
+    closeSideMenuByPan()
   }
   
-  func closeSideMenuByPanEdge(){
-    let edgePan = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(handleEdgePan(gesture:)) )
-    edgePan.edges = .right
-    self.view.addGestureRecognizer(edgePan)
+  func closeSideMenuByPan(){
+    let panEdge = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(handleEdgePan(gesture:)))
+    panEdge.edges = .right
+    view.addGestureRecognizer(panEdge)
   }
   
-  @objc func handleEdgePan(gesture: UIScreenEdgePanGestureRecognizer){
-    NotificationCenter.default.post(name: NSNotification.Name("CloseSideMenyByPanEdge"), object: nil, userInfo: ["data": gesture])
-    
-  }
-  
+ 
   @IBAction func CloseMenuByPressed(_ sender: Any) {
-    NotificationCenter.default.post(name: NSNotification.Name("OpenSideMenu"), object: nil)
+    NotificationCenter.default.post(name: NSNotification.Name("OpenOrCloseSideMenu"), object: nil)
   }
   
   func configureMenuCollectionView(){
     menuCollectionView.delegate = self
     menuCollectionView.dataSource = self
+    menuCollectionView.showsVerticalScrollIndicator = false
   }
 }
 
@@ -60,4 +56,16 @@ extension SideMenuVC: UICollectionViewDelegate, UICollectionViewDataSource, UICo
     return CGSize(width: 165, height: 200)
   }
   
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    NotificationCenter.default.post(name: NSNotification.Name("MoveToTopic"), object: nil, userInfo: ["data": indexPath])
+    NotificationCenter.default.post(name: NSNotification.Name("OpenOrCloseSideMenu"), object: nil)
+  }
+}
+
+// @objc function:
+extension SideMenuVC{
+  @objc func handleEdgePan(gesture: UIScreenEdgePanGestureRecognizer){
+    NotificationCenter.default.post(name: NSNotification.Name("CloseSideMenyByEdgePan"), object: nil, userInfo: ["data": gesture])
+    
+  }
 }
