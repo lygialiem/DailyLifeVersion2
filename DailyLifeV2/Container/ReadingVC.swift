@@ -9,22 +9,21 @@
 import UIKit
 import SDWebImage
 
-class ReadingVC: UIViewController, UITextViewDelegate {
+class ReadingVC: UIViewController {
   
   var article: Article?
   
   @IBOutlet var imageArticle: UIImageView!
   @IBOutlet var titleArticle: UILabel!
-  @IBOutlet var contentArticle: UITextView!
   @IBOutlet var authorArticle: UILabel!
+  @IBOutlet var contenArticles: UITextView!
+  
+  let seeFull = "See full"
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     configureReadingContent()
-    
-    
-    
   }
   
   func  configureReadingContent(){
@@ -33,27 +32,24 @@ class ReadingVC: UIViewController, UITextViewDelegate {
     authorArticle.text = article?.author
     titleArticle.text = article?.title
     
-    contentArticle.layer.cornerRadius = 10
-    let seeFull = "See full"
+    contenArticles.delegate = self
+    contenArticles.layer.cornerRadius = 10
     
-    let articleString = "\(article!.content!) \(article!.content!) \(article!.content!) \(article!.content!) \(article!.content!) \(article!.content!) \(article!.content!) \(article!.content!) - \(seeFull)"
-    let resultString = String(articleString.filter { !"\r\n".contains($0) })
+    let articleString = "\(article!.content!) - \(seeFull)"
+    let completedString = String(articleString.filter { !"\r\n".contains($0) })
     
-   
     let myAttributedString = [NSAttributedString.Key.foregroundColor: UIColor(white: 1, alpha: 1), NSAttributedString.Key.font: UIFont(name: "Helvetica Neue", size: 15.0)!]
     
-    let attributedString = NSMutableAttributedString(string: resultString, attributes: myAttributedString as [NSAttributedString.Key : Any])
-    
-    let numberOfCharacterMinusTheClickableString = resultString.count - seeFull.count
-    print(articleString.count, numberOfCharacterMinusTheClickableString, seeFull.count)
-    attributedString.addAttribute(.link, value: "\(article!.url!)", range: NSRange(location: numberOfCharacterMinusTheClickableString, length: seeFull.count))
-    contentArticle.attributedText = attributedString
-   
+    let attributedString = NSMutableAttributedString(string: completedString, attributes: myAttributedString as [NSAttributedString.Key : Any])
+    attributedString.setAsLink(textToFind: seeFull, linkName: seeFull)
+    contenArticles.attributedText = attributedString
   }
-  
+}
+
+extension ReadingVC: UITextViewDelegate{
   func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-    
-    UIApplication.shared.open(URL)
+    print("Hello")
     return false
   }
 }
+

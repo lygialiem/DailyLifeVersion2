@@ -85,7 +85,7 @@ extension PageVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
   }
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let readingVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReadingVC") as! ReadingVC
+    let readingVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReadingVCTest") as! ReadingVCTest
     readingVC.article = self.dataApi!.articles[indexPath.row]
     self.navigationController?.pushViewController(readingVC, animated: true)
   }
