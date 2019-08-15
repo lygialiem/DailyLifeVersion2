@@ -30,7 +30,9 @@ class PageCell: UICollectionViewCell {
     self.titleArticle.text = title
     
     guard let timePublished = timePublished else {return}
-    self.timePublishedArticle.text = timePublished
+    let isoFormatter = ISO8601DateFormatter()
+    let timePublishedFormatter = isoFormatter.date(from: timePublished)
+    self.timePublishedArticle.text = "\(timePublishedFormatter!)".replacingOccurrences(of: "+0000", with: "", options: .caseInsensitive, range: nil)
     
     guard let image = image else {return}
     self.imageArticle.sd_setImage(with: URL(string: image))

@@ -23,6 +23,7 @@ class PageVC: UIViewController, IndicatorInfoProvider {
     super.viewDidLoad()
     
     configureCollectionView()
+    self.navigationItem.backBarButtonItem?.title = ""
   }
   
   func configureCollectionView(){
@@ -85,8 +86,10 @@ extension PageVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
   }
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let readingVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReadingVCTest") as! ReadingVCTest
+    let readingVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReadingVC") as! ReadingVCTest
     readingVC.article = self.dataApi!.articles[indexPath.row]
+    readingVC.title = menuBarTitle
+    readingVC.navigationItem.backBarButtonItem?.title = ""
     self.navigationController?.pushViewController(readingVC, animated: true)
   }
   

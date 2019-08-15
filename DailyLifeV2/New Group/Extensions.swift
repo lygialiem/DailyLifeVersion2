@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 extension NSMutableAttributedString {
-  func setAsLink(textToFind:String, linkName:String) {
+  func setAsLink(textToFind:String, urlString: String) {
     let foundRange = self.mutableString.range(of: textToFind)
-    self.addAttribute(NSAttributedString.Key.link, value: linkName, range: foundRange)
+    self.addAttribute(NSAttributedString.Key.link, value: urlString, range: foundRange)
   }
 }

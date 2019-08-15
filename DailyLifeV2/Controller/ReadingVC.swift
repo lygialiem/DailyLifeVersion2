@@ -17,39 +17,48 @@ class ReadingVCTest: UIViewController {
   @IBOutlet var titleArticle: UILabel!
   @IBOutlet var authorArticle: UILabel!
   
-  let seeFull = "See full"
+  let seeMore = "See more"
+  
   
   override func viewDidLoad() {
     super.viewDidLoad()
   
     configureContent()
+    
   }
   
-  // Configure content UITextview.
+ 
   func configureContent(){
     guard let urlToImage = article?.urlToImage else {return}
     imageArticle.sd_setImage(with: URL(string: urlToImage), completed: nil)
     titleArticle.text = article?.title
     authorArticle.text = article?.author
     
-    myTextView.delegate = self //Error is here: khi thêm dòng nay vào thì báo lỗi và ngược lại. Nếu không dùng attributedString thì chạy bình thường dù vẫn có myTextView.delegate = self.
+    myTextView.delegate = self
+    myTextView.layer.cornerRadius = 7
     
     let attributedOfString = [NSAttributedString.Key.foregroundColor: UIColor(white: 1, alpha: 1), NSAttributedString.Key.font: UIFont(name: "Helvetica Neue", size: 15)]
     
-    let stringContent = "\(article!.content!)! - \(seeFull)"
-    let attributedString = NSMutableAttributedString(string: stringContent, attributes: attributedOfString as [NSAttributedString.Key : Any])
-    attributedString.setAsLink(textToFind: seeFull, linkName: seeFull)
+    let stringContent = "\(article!.content!)! - \(seeMore)"
+    let completedConent = stringContent.replacingOccurrences(of: "[]", with: "(", options: String.CompareOptions.literal, range: nil)
+    let finalContent = completedConent.replacingOccurrences(of: "]", with: ")", options: String.CompareOptions.literal, range: nil)
+    let attributedString = NSMutableAttributedString(string: finalContent, attributes: attributedOfString as [NSAttributedString.Key : Any])
+    
+    guard let url = article?.url else {return}
+    attributedString.setAsLink(textToFind: seeMore, urlString: url)
     
     myTextView.attributedText = attributedString
-    //
+    
   }
 }
 
 extension ReadingVCTest:  UITextViewDelegate{
   func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-    //Action when Users click to "See full":
-    print("Did select Hyperlink")
-    //
+    let webViewViewController = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebViewVC") as! WebViewController
+    
+    webViewViewController.urlOfContent = URL.absoluteString
+  navigationController?.pushViewController(webViewViewController, animated: true)
+    
     return false
   }
 }
