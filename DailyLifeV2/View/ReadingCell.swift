@@ -1,37 +1,37 @@
 //
-//  ReadingVCTest.swift
+//  ReadingCell.swift
 //  DailyLifeV2
 //
-//  Created by Lý Gia Liêm on 8/14/19.
+//  Created by Lý Gia Liêm on 8/15/19.
 //  Copyright © 2019 LGL. All rights reserved.
 //
 
 import UIKit
 import SDWebImage
 
-class ReadingVCTest: UIViewController {
+protocol ReadingCellDelegate{
+  func didPressSeeMore(url: String)
+}
+
+class ReadingCell: UICollectionViewCell {
   
-  var article: Article?
   @IBOutlet var myTextView: UITextView!
   @IBOutlet var imageArticle: UIImageView!
   @IBOutlet var titleArticle: UILabel!
   @IBOutlet var authorArticle: UILabel!
   
   let seeMore = "See more"
+  var delegate: ReadingCellDelegate?
   
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-  
-    configureContent()
+  override func awakeFromNib() {
+    super.awakeFromNib()
     
   }
   
- 
-  func configureContent(){
+  func configureContent(article: Article?){
     guard let urlToImage = article?.urlToImage else {return}
     imageArticle.sd_setImage(with: URL(string: urlToImage), completed: nil)
-    titleArticle.text = article?.title
+    titleArticle.text = article?.title?.capitalized
     authorArticle.text = article?.author
     
     myTextView.delegate = self
@@ -40,8 +40,10 @@ class ReadingVCTest: UIViewController {
     let attributedOfString = [NSAttributedString.Key.foregroundColor: UIColor(white: 1, alpha: 1), NSAttributedString.Key.font: UIFont(name: "Helvetica Neue", size: 15)]
     
     let stringContent = "\(article!.content!)! - \(seeMore)"
-    let completedConent = stringContent.replacingOccurrences(of: "[]", with: "(", options: String.CompareOptions.literal, range: nil)
-    let finalContent = completedConent.replacingOccurrences(of: "]", with: ")", options: String.CompareOptions.literal, range: nil)
+    let completedConent = stringContent.replacingOccurrences(of: "[", with: "(", options: String.CompareOptions.literal, range: nil)
+    let completedConent1 = completedConent.replacingOccurrences(of: "+", with: "", options: String.CompareOptions.literal, range: nil)
+    let completedConent2 = completedConent1.replacingOccurrences(of: "!", with: "", options: String.CompareOptions.literal, range: nil)
+    let finalContent = completedConent2.replacingOccurrences(of: "]", with: ")", options: String.CompareOptions.literal, range: nil)
     let attributedString = NSMutableAttributedString(string: finalContent, attributes: attributedOfString as [NSAttributedString.Key : Any])
     
     guard let url = article?.url else {return}
@@ -52,12 +54,10 @@ class ReadingVCTest: UIViewController {
   }
 }
 
-extension ReadingVCTest:  UITextViewDelegate{
+extension ReadingCell:  UITextViewDelegate{
   func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-    let webViewViewController = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebViewVC") as! WebViewController
-    
-    webViewViewController.urlOfContent = URL.absoluteString
-  navigationController?.pushViewController(webViewViewController, animated: true)
+   
+    delegate?.didPressSeeMore(url: URL.absoluteString)
     
     return false
   }

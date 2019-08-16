@@ -56,8 +56,6 @@ class PageVC: UIViewController, IndicatorInfoProvider {
   func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
     return IndicatorInfo(title: "\(menuBarTitle)")
   }
-  
-  
 }
 
 extension PageVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
@@ -69,7 +67,7 @@ extension PageVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellOfArticles", for: indexPath) as! PageCell
-    cell.confiureCell(title: dataApi!.articles[indexPath.row].title,
+    cell.confiureCell(title: dataApi!.articles[indexPath.row].title?.capitalized,
                       timePublished: dataApi!.articles[indexPath.row].publishedAt,
                       image: dataApi!.articles[indexPath.row].urlToImage)
     
@@ -86,11 +84,12 @@ extension PageVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
   }
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let readingVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReadingVC") as! ReadingVCTest
-    readingVC.article = self.dataApi!.articles[indexPath.row]
-    readingVC.title = menuBarTitle
-    readingVC.navigationItem.backBarButtonItem?.title = ""
-    self.navigationController?.pushViewController(readingVC, animated: true)
+    let readingVC2 = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReadingVC2") as! ReadingVC2
+    readingVC2.articles = self.dataApi!.articles
+    readingVC2.indexPathOfDidSelectedArticle = indexPath
+    readingVC2.title = menuBarTitle
+    readingVC2.navigationItem.backBarButtonItem?.title = ""
+    self.navigationController?.pushViewController(readingVC2, animated: true)
   }
   
   func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {

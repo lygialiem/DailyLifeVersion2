@@ -6,11 +6,12 @@ class HomeVC: UIViewController {
   @IBOutlet var mainContainer: UIView!
 
   var isSideMenuOpen = false
+  @IBOutlet var sideLeadingConstraint: NSLayoutConstraint!
   
  
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    sideLeadingConstraint.constant = -self.view.frame.width
     NotificationCenter.default.addObserver(self, selector: #selector(openSideMenu), name: Notification.Name("OpenOrCloseSideMenu"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(handleCloseSideMenuByPan(notification:)), name: NSNotification.Name("CloseSideMenyByEdgePan"), object: nil)
     
@@ -34,12 +35,12 @@ class HomeVC: UIViewController {
     UIView.animate(withDuration: 0.2) {
       if gesture.state == .ended {
         if self.mainContainer.frame.origin.x < 300 {
-          self.sideContainer.frame.origin.x = -375
+          self.sideContainer.frame.origin.x = -self.view.frame.width
           self.mainContainer.frame.origin.x = 0
           self.isSideMenuOpen = false
         } else {
           self.sideContainer.frame.origin.x = 0
-          self.mainContainer.frame.origin.x = 375
+          self.mainContainer.frame.origin.x = self.view.frame.width
           self.isSideMenuOpen = true
         }
       }
@@ -54,10 +55,10 @@ class HomeVC: UIViewController {
       if gesture.state == .ended{
         if self.mainContainer.frame.origin.x > 70 {
           self.sideContainer.frame.origin.x = 0
-          self.mainContainer.frame.origin.x = 375
+          self.mainContainer.frame.origin.x = self.view.frame.width
           self.isSideMenuOpen = true
         } else {
-          self.sideContainer.frame.origin.x = -375
+          self.sideContainer.frame.origin.x = -self.view.frame.width
           self.mainContainer.frame.origin.x = 0
           self.isSideMenuOpen = false
         }
@@ -69,12 +70,12 @@ class HomeVC: UIViewController {
   @objc func openSideMenu(){
     UIView.animate(withDuration: 0.2) {
       if self.isSideMenuOpen {
-        self.sideContainer.frame.origin.x = -375
+        self.sideContainer.frame.origin.x = -self.view.frame.width
         self.mainContainer.frame.origin.x = 0
         self.isSideMenuOpen = false
       } else {
         self.sideContainer.frame.origin.x = 0
-        self.mainContainer.frame.origin.x = 375
+        self.mainContainer.frame.origin.x = self.view.frame.width
         self.isSideMenuOpen = true
       }
     }

@@ -9,7 +9,7 @@
 import UIKit
 import WebKit
 
-class WebViewController: UIViewController, WKNavigationDelegate, UITextFieldDelegate {
+class WebViewController: UIViewController {
   
   @IBOutlet var webViewArticle: WKWebView!
   @IBOutlet var linkTextField: UITextField!
@@ -20,6 +20,7 @@ class WebViewController: UIViewController, WKNavigationDelegate, UITextFieldDele
   
   
   var urlOfContent: String?
+  let mainLink = "www.vice.com"
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -28,6 +29,7 @@ class WebViewController: UIViewController, WKNavigationDelegate, UITextFieldDele
     setupWebViewArticle()
     
   }
+  
   func setupLinkTextField(){
     linkTextField.delegate = self
     linkTextField.text = String(urlOfContent!)
@@ -55,7 +57,6 @@ class WebViewController: UIViewController, WKNavigationDelegate, UITextFieldDele
     webViewArticle.addGestureRecognizer(swipeLeft)
     webViewArticle.addGestureRecognizer(swipeRight)
     webViewArticle.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
-    
   }
   @objc func pullToRefreshWebView(sender: UIRefreshControl){
     webViewArticle.reload()
@@ -73,22 +74,6 @@ class WebViewController: UIViewController, WKNavigationDelegate, UITextFieldDele
       webViewArticle.goBack()
     }
   }
- 
-  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-    var urlString = textField.text!
-    if urlString.contains("https://www.") == false{
-      urlString = "https://www.\(urlString)"
-    } else if urlString.contains("https://") == false{
-      urlString = "https://\(urlString)"
-    }
-    webViewArticle.load(URLRequest(url: URL(string: urlString)!))
-    textField.resignFirstResponder()
-    return true
-  }
-  
-  func textFieldDidBeginEditing(_ textField: UITextField) {
-    textField.selectAll(nil)
-  }
   
   @IBAction func backButton(_ sender: Any) {
     if webViewArticle.canGoBack{
@@ -105,6 +90,37 @@ class WebViewController: UIViewController, WKNavigationDelegate, UITextFieldDele
     webViewArticle.reload()
   }
   
+  override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    if keyPath == "estimatedProgress"{
+      progressView.progress = Float(webViewArticle.estimatedProgress)
+    }
+  }
+}
+
+extension WebViewController: UITextFieldDelegate{
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    var urlString = textField.text!
+    if urlString.contains("https://www.") == false{
+      urlString = "https://www.\(urlString)"
+    } else if urlString.contains("https://") == false{
+      urlString = "https://\(urlString)"
+    }
+    webViewArticle.load(URLRequest(url: URL(string: urlString)!))
+    textField.resignFirstResponder()
+    return true
+  }
+  
+  func textFieldDidBeginEditing(_ textField: UITextField) {
+    linkTextField.text = String(urlOfContent!)
+    textField.selectAll(nil)
+  }
+  func textFieldDidEndEditing(_ textField: UITextField) {
+    textField.becomeFirstResponder()
+    textField.text = mainLink
+  }
+}
+
+extension WebViewController: WKNavigationDelegate{
   func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
     linkTextField.text = webView.url?.absoluteString
     progressView.isHidden = false
@@ -117,13 +133,6 @@ class WebViewController: UIViewController, WKNavigationDelegate, UITextFieldDele
       backButton.isEnabled = true
     }
     progressView.isHidden = true
-    refreshButton.isEnabled = true
-  }
-  
-  override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-    if keyPath == "estimatedProgress"{
-      progressView.progress = Float(webViewArticle.estimatedProgress)
-    }
-    
+    linkTextField.text = mainLink
   }
 }
