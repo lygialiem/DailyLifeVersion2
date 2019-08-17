@@ -55,6 +55,12 @@ class MainVC: ButtonBarPagerTabStripViewController {
     for i in 0..<ApiServices.instance.TOPIC_NEWSAPI.count{
       let pageVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "PageControllerID") as! PageVC
       pageVC.menuBarTitle = ApiServices.instance.TOPIC_NEWSAPI[i]
+      DispatchQueue.main.async {
+        ApiServices.instance.getMoreNewsApi(topic: ApiServices.instance.TOPIC_NEWSAPI[i], page: 5) { (dataApi) in
+          pageVC.articlesOfConcern = dataApi.articles
+        }
+      }
+     
       ApiServices.instance.getNewsApi(topic: ApiServices.instance.TOPIC_NEWSAPI[i]) {(dataApi) in
         pageVC.dataApi = dataApi
   

@@ -1,22 +1,30 @@
+//
+//  ReadingVC.swift
+//  DailyLifeV2
+//
+//  Created by Lý Gia Liêm on 8/17/19.
+//  Copyright © 2019 LGL. All rights reserved.
+//
 
 import UIKit
 import SDWebImage
 import SafariServices
 
-class ReadingVC2: UIViewController{
+class ReadingVC: UIViewController {
   
   @IBOutlet var readingCollectionView: UICollectionView!
   
   var articles = [Article]()
   var indexPathOfDidSelectedArticle: IndexPath?
+  var articlesOfConcern = [Article]()
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     setupReadingCollectionView()
-
+    
   }
-  
+
   func setupReadingCollectionView(){
     readingCollectionView.delegate = self
     readingCollectionView.dataSource = self
@@ -26,16 +34,18 @@ class ReadingVC2: UIViewController{
   }
 }
 
-extension ReadingVC2: UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource{
+extension ReadingVC: UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource{
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return articles.count
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let readingCell = collectionView.dequeueReusableCell(withReuseIdentifier: "readingCell", for: indexPath) as! ReadingCell
+    let readingCell = collectionView.dequeueReusableCell(withReuseIdentifier: "readingHorizoneCell", for: indexPath) as! ReadingCollectionViewCell
+    
     readingCell.delegate = self
-    readingCell.configureContent(article: self.articles[indexPath.row])
-   return readingCell
+    readingCell.article = articles[indexPath.row]
+    readingCell.articlesOfConcern = articlesOfConcern
+    return readingCell
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -47,11 +57,21 @@ extension ReadingVC2: UICollectionViewDelegateFlowLayout, UICollectionViewDelega
   }
 }
 
-extension ReadingVC2: ReadingCellDelegate{
+extension ReadingVC: ReadingCellDelegate{
   func didPressSeeMore(url: String) {
     
+    print("Aloha")
     let webViewViewController = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebViewVC") as! WebViewController
     webViewViewController.urlOfContent = url
-    navigationController?.pushViewController(webViewViewController, animated: true)
+    self.navigationController?.pushViewController(webViewViewController, animated: true)
+  }
+}
+
+
+extension ReadingVC: ReadingCollectionViewCellDelegate{
+  func movoWebViewController(url: String) {
+    let webViewViewController = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebViewVC") as! WebViewController
+    webViewViewController.urlOfContent = url
+    self.navigationController?.pushViewController(webViewViewController, animated: true)
   }
 }

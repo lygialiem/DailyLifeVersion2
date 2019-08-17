@@ -15,6 +15,7 @@ class PageVC: UIViewController, IndicatorInfoProvider {
   var dataApi: NewsApi?
   var menuBarTitle: String = ""
   var currentPage = 2
+  var articlesOfConcern = [Article]()
   
   let refreshControl = UIRefreshControl()
   
@@ -24,6 +25,7 @@ class PageVC: UIViewController, IndicatorInfoProvider {
     
     configureCollectionView()
     self.navigationItem.backBarButtonItem?.title = ""
+
   }
   
   func configureCollectionView(){
@@ -84,12 +86,13 @@ extension PageVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
   }
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let readingVC2 = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReadingVC2") as! ReadingVC2
-    readingVC2.articles = self.dataApi!.articles
-    readingVC2.indexPathOfDidSelectedArticle = indexPath
-    readingVC2.title = menuBarTitle
-    readingVC2.navigationItem.backBarButtonItem?.title = ""
-    self.navigationController?.pushViewController(readingVC2, animated: true)
+    let readingVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReadingVC") as! ReadingVC
+    readingVC.articlesOfConcern = self.articlesOfConcern
+    readingVC.articles = self.dataApi!.articles
+    readingVC.indexPathOfDidSelectedArticle = indexPath
+    readingVC.title = menuBarTitle
+    readingVC.navigationItem.backBarButtonItem?.title = ""
+    self.navigationController?.pushViewController(readingVC, animated: true)
   }
   
   func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
