@@ -9,7 +9,6 @@
 import UIKit
 import SDWebImage
 
-
 class PageCell: UICollectionViewCell {
   
   @IBOutlet var imageArticle: UIImageView!
@@ -48,7 +47,7 @@ class PageCell: UICollectionViewCell {
     }
   }
   @IBAction func shareButtonByPressed(_ sender: Any) {
-    NotificationCenter.default.post(name: NSNotification.Name("shareAction"), object: nil, userInfo: ["data": self.articles?.url!])
+    NotificationCenter.default.post(name: NSNotification.Name("shareAction"), object: nil, userInfo: ["data": self.articles!.url!])
   }
   @IBAction func likeButtonByPress(_ sender: Any) {
     if isLikedStateButton{
@@ -83,8 +82,9 @@ class PageCell: UICollectionViewCell {
     let managedContext = appDelegate!.persistentContainer.viewContext
     let coreData = FavoriteArtilce(context: managedContext)
     
-    coreData.authorCD = articles!.author!
-    coreData.contentCD = articles!.content!
+    coreData.authorCD = articles?.author
+    
+    coreData.contentCD = articles?.content
     coreData.descriptionCD = articles?.description
     coreData.publishedAtCD = articles?.publishedAt
     coreData.titleCD = articles?.title

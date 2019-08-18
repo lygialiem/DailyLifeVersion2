@@ -28,7 +28,9 @@ class FavoriteCell: UITableViewCell {
     imageArticle.sd_setImage(with:  URL(string: urlToImageCD), completed: nil)
     
     guard let timePublishedArticle = article.publishedAtCD else {return}
-    self.timePublishedArticle.text = timePublishedArticle
+    let iso = ISO8601DateFormatter()
+    let formatString = iso.date(from: timePublishedArticle)
+    self.timePublishedArticle.text = "\(formatString!)".replacingOccurrences(of: "+0000", with: "")
     
     guard let titleArticle = article.titleCD else {return}
     self.titleArticle.text = titleArticle

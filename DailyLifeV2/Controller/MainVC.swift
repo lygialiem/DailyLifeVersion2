@@ -25,8 +25,6 @@ class MainVC: ButtonBarPagerTabStripViewController {
     NotificationCenter.default.addObserver(self, selector: #selector(moveToTopic(notification:)), name: NSNotification.Name("MoveToTopic"), object: nil)
   }
   
-  
-  
   func configureButtonBar() {
     settings.style.selectedBarHeight = 4
     settings.style.selectedBarBackgroundColor = #colorLiteral(red: 0, green: 0.9222823977, blue: 0.7017730474, alpha: 1)
@@ -55,15 +53,14 @@ class MainVC: ButtonBarPagerTabStripViewController {
     for i in 0..<ApiServices.instance.TOPIC_NEWSAPI.count{
       let pageVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "PageControllerID") as! PageVC
       pageVC.menuBarTitle = ApiServices.instance.TOPIC_NEWSAPI[i]
+      
       DispatchQueue.main.async {
         ApiServices.instance.getMoreNewsApi(topic: ApiServices.instance.TOPIC_NEWSAPI[i], page: 3,size: 10) { (dataApi) in
           pageVC.articlesOfConcern = dataApi.articles
         }
       }
-     
       ApiServices.instance.getNewsApi(topic: ApiServices.instance.TOPIC_NEWSAPI[i]) {(dataApi) in
         pageVC.dataApi = dataApi
-  
         if i == 0 {
           DispatchQueue.main.async {
             pageVC.newsFeedCV.reloadData()

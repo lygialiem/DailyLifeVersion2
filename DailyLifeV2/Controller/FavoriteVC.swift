@@ -16,15 +16,17 @@ class FavoriteVC: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    print(!)
+    self.swiftLabel.stopBlink()
+    self.swiftLabel.startBlink()
     CoreDataServices.instance.fetchCoreData { (favoriteArticlesCD) in
       self.articlesCoreData = favoriteArticlesCD.reversed()
-      self.myTableView.reloadData()
+      
       if favoriteArticlesCD == []{
         self.myTableView.isHidden = true
-      }else {
+      } else {
         self.myTableView.isHidden = false
       }
+      self.myTableView.reloadData()
     }
   }
   
@@ -33,8 +35,8 @@ class FavoriteVC: UIViewController {
     
     myTableView.delegate = self
     myTableView.dataSource = self
-    
     self.swiftLabel.startBlink()
+    myTableView.isHidden = false
     
   }
   
@@ -50,6 +52,7 @@ class FavoriteVC: UIViewController {
   }
   
   @IBAction func deleteAllButtonByPressed(_ sender: Any) {
+    self.myTableView.isHidden = true
     
     guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
     let managedContext = appDelegate.persistentContainer.viewContext
@@ -107,6 +110,12 @@ extension FavoriteVC: UITableViewDelegate, UITableViewDataSource {
       self.removeItemAtIndexPathCoreData(atIndexPath: indexPath)
       CoreDataServices.instance.fetchCoreData(completion: { (favoriteArticlesCD) in
         self.articlesCoreData = favoriteArticlesCD.reversed()
+        
+        if favoriteArticlesCD == []{
+          self.myTableView.isHidden = true
+        } else {
+          self.myTableView.isHidden = false
+        }
       })
       tableView.deleteRows(at: [indexPath], with: .bottom)
       NotificationCenter.default.post(name: NSNotification.Name("reload"), object: nil)
@@ -121,7 +130,7 @@ extension FavoriteVC: UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    return "Article"
+    return "Articles"
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

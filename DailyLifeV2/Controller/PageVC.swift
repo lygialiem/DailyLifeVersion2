@@ -17,9 +17,7 @@ class PageVC: UIViewController, IndicatorInfoProvider {
   var currentPage = 2
   var articlesOfConcern = [Article]()
   
-  
   let refreshControl = UIRefreshControl()
-  
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -28,7 +26,7 @@ class PageVC: UIViewController, IndicatorInfoProvider {
     self.navigationItem.backBarButtonItem?.title = ""
     
     NotificationCenter.default.addObserver(self, selector: #selector(handleReload), name: NSNotification.Name("reload"), object: nil)
-     NotificationCenter.default.addObserver(self, selector: #selector(handleShareAction(notification:)), name: NSNotification.Name("shareAction"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(handleShareAction(notification:)), name: NSNotification.Name("shareAction"), object: nil)
     
   }
   @objc func handleShareAction(notification: Notification){
@@ -50,7 +48,7 @@ class PageVC: UIViewController, IndicatorInfoProvider {
     refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: UIControl.Event.valueChanged)
     newsFeedCV.refreshControl = refreshControl
   }
-  // Use flag to insert new Article to newFeeds:
+  // Use indexOfNewArticle to insert new Article to newFeeds:
   var indexOfNewArticle = 0
   @objc func handleRefreshControl(){
     ApiServices.instance.getNewsApi(topic: menuBarTitle) { (dataApi) in

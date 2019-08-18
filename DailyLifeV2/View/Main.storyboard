@@ -234,7 +234,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="330" height="268"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Health" translatesAutoresizingMaskIntoConstraints="NO" id="iIw-NW-r39">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noImage" translatesAutoresizingMaskIntoConstraints="NO" id="iIw-NW-r39">
                                                     <rect key="frame" x="0.0" y="0.0" width="330" height="271"/>
                                                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </imageView>
@@ -264,14 +264,14 @@
                                                             <rect key="frame" x="250" y="40" width="70" height="30"/>
                                                             <subviews>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BmQ-ou-G18">
-                                                                    <rect key="frame" x="0.0" y="4" width="29.5" height="22"/>
+                                                                    <rect key="frame" x="0.0" y="2.5" width="29.5" height="25"/>
                                                                     <state key="normal" image="greenLikeButton"/>
                                                                     <connections>
                                                                         <action selector="likeButtonByPress:" destination="9ET-gd-IuL" eventType="touchUpInside" id="xPP-6N-t44"/>
                                                                     </connections>
                                                                 </button>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ido-z7-7EJ">
-                                                                    <rect key="frame" x="40.5" y="4" width="29.5" height="22"/>
+                                                                    <rect key="frame" x="40.5" y="0.0" width="29.5" height="30"/>
                                                                     <state key="normal" image="shareButton"/>
                                                                     <connections>
                                                                         <action selector="shareButtonByPressed:" destination="9ET-gd-IuL" eventType="touchUpInside" id="llP-e4-oDm"/>
@@ -527,9 +527,9 @@
                                 <color key="textColor" red="0.4279067218" green="0.89328533409999999" blue="0.72546827790000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nk7-yT-NoC">
+                            <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nk7-yT-NoC">
                                 <rect key="frame" x="0.0" y="64" width="375" height="554"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="favoriteCell" rowHeight="102" id="Brw-av-NxZ" customClass="FavoriteCell" customModule="DailyLifeV2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="102"/>
@@ -538,21 +538,21 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="102"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Politics" translatesAutoresizingMaskIntoConstraints="NO" id="kGP-gP-e8X">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noImage" translatesAutoresizingMaskIntoConstraints="NO" id="kGP-gP-e8X">
                                                     <rect key="frame" x="5" y="5" width="163.5" height="92"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="kGP-gP-e8X" secondAttribute="height" multiplier="16:9" id="vjC-nc-XVM"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8GA-Xv-RKW">
-                                                    <rect key="frame" x="173.5" y="5" width="196.5" height="70.5"/>
+                                                    <rect key="frame" x="173.5" y="5" width="196.5" height="71.5"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="2019-08-01 " lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3JY-mE-z5u">
-                                                    <rect key="frame" x="173.5" y="80.5" width="196.5" height="16.5"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Italic" family="Helvetica Neue" pointSize="14"/>
+                                                    <rect key="frame" x="173.5" y="81.5" width="196.5" height="15.5"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Italic" family="Helvetica Neue" pointSize="13"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -684,7 +684,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="371.5"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
-                                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Food" translatesAutoresizingMaskIntoConstraints="NO" id="yg2-m2-KHp">
+                                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noImage" translatesAutoresizingMaskIntoConstraints="NO" id="yg2-m2-KHp">
                                                                         <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" secondItem="yg2-m2-KHp" secondAttribute="height" multiplier="16:9" id="f2E-wf-bn8"/>
@@ -733,8 +733,8 @@
                                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <connections>
                                                                 <outlet property="authorArticle" destination="bBA-fD-GUR" id="dbn-wt-oQc"/>
+                                                                <outlet property="contentArticle" destination="xRu-hE-F8C" id="7TZ-Dh-JFj"/>
                                                                 <outlet property="imageArticle" destination="yg2-m2-KHp" id="YtM-lF-Kr0"/>
-                                                                <outlet property="myTextView" destination="xRu-hE-F8C" id="qmv-1o-92h"/>
                                                                 <outlet property="titleArticle" destination="yPv-0E-74t" id="g2m-gV-DwO"/>
                                                             </connections>
                                                         </tableViewCell>
@@ -745,7 +745,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="99.5"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
-                                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Health" translatesAutoresizingMaskIntoConstraints="NO" id="Asm-9n-oHj">
+                                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noImage" translatesAutoresizingMaskIntoConstraints="NO" id="Asm-9n-oHj">
                                                                         <rect key="frame" x="5" y="5" width="159" height="89.5"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" secondItem="Asm-9n-oHj" secondAttribute="height" multiplier="16:9" id="Npm-Rd-WLb"/>
@@ -873,7 +873,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Food" translatesAutoresizingMaskIntoConstraints="NO" id="rvJ-aZ-nGU">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noImage" translatesAutoresizingMaskIntoConstraints="NO" id="rvJ-aZ-nGU">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="rvJ-aZ-nGU" secondAttribute="height" multiplier="16:9" id="76P-JB-Nla"/>
@@ -949,15 +949,13 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Food" width="3581" height="4013"/>
-        <image name="Health" width="1600" height="1151"/>
-        <image name="Politics" width="1600" height="1067"/>
         <image name="Travel" width="1600" height="1181"/>
         <image name="greenLikeButton" width="25" height="25"/>
         <image name="heartSketch" width="25" height="25"/>
         <image name="homeSketch" width="25" height="25"/>
         <image name="move" width="25" height="25"/>
         <image name="moveright" width="25" height="25"/>
+        <image name="noImage" width="110" height="84"/>
         <image name="refresh" width="25" height="25"/>
         <image name="shareButton" width="75" height="75"/>
     </resources>

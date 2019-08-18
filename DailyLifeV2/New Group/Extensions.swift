@@ -19,9 +19,9 @@ extension NSMutableAttributedString {
 extension UILabel {
   
   func startBlink() {
-    UIView.animate(withDuration: 0.8,
+    UIView.animate(withDuration: 1.5,
                    delay:0.0,
-                   options:[.allowUserInteraction, .curveEaseInOut, .autoreverse, .repeat],
+                   options:[.curveEaseInOut, .autoreverse, .repeat],
                    animations: { self.alpha = 0 },
                    completion: nil)
   }
@@ -29,5 +29,19 @@ extension UILabel {
   func stopBlink() {
     layer.removeAllAnimations()
     alpha = 1
+  }
+}
+
+public extension Array where Element: Hashable {
+  
+  /// Return the array with all duplicates removed.
+  ///
+  /// i.e. `[ 1, 2, 3, 1, 2 ].uniqued() == [ 1, 2, 3 ]`
+  ///
+  /// - note: Taken from stackoverflow.com/a/46354989/3141234, as
+  ///         per @Alexander's comment.
+  func uniqued() -> [Element] {
+    var seen = Set<Element>()
+    return self.filter { seen.insert($0).inserted }
   }
 }

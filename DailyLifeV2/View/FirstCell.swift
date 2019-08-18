@@ -1,11 +1,3 @@
-//
-//  ReadingTableViewCell.swift
-//  DailyLifeV2
-//
-//  Created by Lý Gia Liêm on 8/17/19.
-//  Copyright © 2019 LGL. All rights reserved.
-//
-
 import UIKit
 
 protocol ReadingCellDelegate{
@@ -15,7 +7,7 @@ protocol ReadingCellDelegate{
 class FirstCell: UITableViewCell {
   
   
-  @IBOutlet var myTextView: UITextView!
+  @IBOutlet var contentArticle: UITextView!
   @IBOutlet var imageArticle: UIImageView!
   @IBOutlet var authorArticle: UILabel!
   @IBOutlet var titleArticle: UILabel!
@@ -34,14 +26,14 @@ class FirstCell: UITableViewCell {
   }
   
   func configureContent(article: Article?){
-
+    
     guard let urlToImage = article?.urlToImage else {return}
     imageArticle.sd_setImage(with: URL(string: urlToImage), completed: nil)
     titleArticle.text = article?.title?.capitalized
     authorArticle.text = article?.author
- 
-    myTextView.layer.cornerRadius = 7
-    myTextView.delegate = self
+    
+    contentArticle.layer.cornerRadius = 7
+    contentArticle.delegate = self
     
     let attributedOfString = [NSAttributedString.Key.foregroundColor: UIColor(white: 1, alpha: 1), NSAttributedString.Key.font: UIFont(name: "Helvetica Neue", size: 15)]
     
@@ -55,7 +47,7 @@ class FirstCell: UITableViewCell {
     guard let url = article?.url else {return}
     attributedString.setAsLink(textToFind: seeMore, urlString: url)
     
-    myTextView.attributedText = attributedString
+    contentArticle.attributedText = attributedString
   }
 }
 
@@ -67,5 +59,3 @@ extension FirstCell:  UITextViewDelegate{
     return false
   }
 }
-
-

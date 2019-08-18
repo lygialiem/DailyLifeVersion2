@@ -29,6 +29,7 @@ class SideMenuVC: UIViewController {
     NotificationCenter.default.post(name: NSNotification.Name("OpenOrCloseSideMenu"), object: nil)
   }
   
+  
   func configureMenuCollectionView(){
     menuCollectionView.delegate = self
     menuCollectionView.dataSource = self
@@ -46,8 +47,8 @@ extension SideMenuVC: UICollectionViewDelegate, UICollectionViewDataSource, UICo
     
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellOfSideMenu", for: indexPath) as! SideMenuCell
     
-    cell.imageSideMenu.image = UIImage(named: "\(ApiServices.instance.TOPIC_NEWSAPI[indexPath.row])")
-    cell.topic.text = "\(ApiServices.instance.TOPIC_NEWSAPI[indexPath.row])"
+    cell.imageName = ApiServices.instance.TOPIC_NEWSAPI[indexPath.row]
+    cell.topicName = ApiServices.instance.TOPIC_NEWSAPI[indexPath.row]
     
     return cell
   }
