@@ -35,5 +35,4 @@ class SecondCell: UITableViewCell {
     let isoString = iso8601.date(from: article.publishedAt!)
     timePublishedArticle.text = "\(isoString!)".replacingOccurrences(of: "+0000", with: "")
   }
-  
 }

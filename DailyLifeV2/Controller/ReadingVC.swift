@@ -22,9 +22,14 @@ class ReadingVC: UIViewController {
     super.viewDidLoad()
     
     setupReadingCollectionView()
-    
+    NotificationCenter.default.addObserver(self, selector: #selector(handleMoveToWebViewViewController(notification:)) , name: NSNotification.Name("NavigateToWebViewVCFromFirstCell"), object: nil)
+
   }
 
+  @objc func handleMoveToWebViewViewController(notification: Notification){
+    let webViewController = notification.userInfo!["data"] as! WebViewController
+    navigationController?.pushViewController(webViewController, animated: true)
+  }
   func setupReadingCollectionView(){
     readingCollectionView.delegate = self
     readingCollectionView.dataSource = self
@@ -57,19 +62,9 @@ extension ReadingVC: UICollectionViewDelegateFlowLayout, UICollectionViewDelegat
   }
 }
 
-extension ReadingVC: ReadingCellDelegate{
-  func didPressSeeMore(url: String) {
-    
-    print("Aloha")
-    let webViewViewController = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebViewVC") as! WebViewController
-    webViewViewController.urlOfContent = url
-    self.navigationController?.pushViewController(webViewViewController, animated: true)
-  }
-}
-
-
 extension ReadingVC: ReadingCollectionViewCellDelegate{
   func movoWebViewController(url: String) {
+    
     let webViewViewController = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebViewVC") as! WebViewController
     webViewViewController.urlOfContent = url
     self.navigationController?.pushViewController(webViewViewController, animated: true)

@@ -17,6 +17,7 @@ class PageVC: UIViewController, IndicatorInfoProvider {
   var currentPage = 2
   var articlesOfConcern = [Article]()
   
+  
   let refreshControl = UIRefreshControl()
   
   
@@ -25,7 +26,18 @@ class PageVC: UIViewController, IndicatorInfoProvider {
     
     configureCollectionView()
     self.navigationItem.backBarButtonItem?.title = ""
-
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(handleReload), name: NSNotification.Name("reload"), object: nil)
+     NotificationCenter.default.addObserver(self, selector: #selector(handleShareAction(notification:)), name: NSNotification.Name("shareAction"), object: nil)
+    
+  }
+  @objc func handleShareAction(notification: Notification){
+    let url = notification.userInfo!["data"]
+    let share = UIActivityViewController(activityItems: [url!], applicationActivities: nil)
+    self.present(share, animated: true, completion: nil)
+  }
+  @objc func handleReload(){
+    self.newsFeedCV.reloadData()
   }
   
   func configureCollectionView(){
@@ -67,18 +79,38 @@ extension PageVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
     return dataApi.articles.count
   }
   
+  
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellOfArticles", for: indexPath) as! PageCell
-    cell.confiureCell(title: dataApi!.articles[indexPath.row].title?.capitalized,
-                      timePublished: dataApi!.articles[indexPath.row].publishedAt,
-                      image: dataApi!.articles[indexPath.row].urlToImage)
+    cell.confiureCell(articles: (dataApi?.articles[indexPath.row])!)
     
+    // check CoreData to show the state (liked - not like) of the Button Outlet:
+    var flag = 0
+    CoreDataServices.instance.fetchCoreData { (favoriteArticlesCD) in
+      if favoriteArticlesCD == []{
+        cell.likeButton.setImage(UIImage(named: "greenLikeButton"), for: .normal)
+        cell.isLikedStateButton = false
+      } else{
+        for i in 0..<favoriteArticlesCD.count {
+          if dataApi?.articles[indexPath.row].title == favoriteArticlesCD[i].titleCD{
+            cell.likeButton.setImage(UIImage(named: "redLikeButton"), for: .normal)
+            cell.isLikedStateButton = true
+          }else {
+            flag += 1
+          }
+          if flag > favoriteArticlesCD.count - 1{
+            cell.likeButton.setImage(UIImage(named: "greenLikeButton"), for: .normal)
+            cell.isLikedStateButton = false
+          }
+        }
+      }
+    }
     return cell
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     let width = self.view.frame.width - 40
-    return CGSize(width: width, height: width * 9 / 16 + 50)
+    return CGSize(width: width, height: width * 9 / 16 + 60)
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -100,7 +132,7 @@ extension PageVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
     if indexPath.row == dataApi!.articles.count - 1{
       let numberOfPage = 5
       if currentPage <= numberOfPage{
-        ApiServices.instance.getMoreNewsApi(topic: menuBarTitle , page: currentPage) { (dataApi) in
+        ApiServices.instance.getMoreNewsApi(topic: menuBarTitle , page: currentPage, size: 20 ) { (dataApi) in
           for article in dataApi.articles{
             self.dataApi!.articles.append(article)
           }

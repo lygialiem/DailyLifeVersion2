@@ -21,6 +21,7 @@ class WebViewController: UIViewController {
   
   var urlOfContent: String?
   let mainLink = "www.vice.com"
+  var isWebViewFinishLoading = false
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -58,6 +59,7 @@ class WebViewController: UIViewController {
     webViewArticle.addGestureRecognizer(swipeRight)
     webViewArticle.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
   }
+  
   @objc func pullToRefreshWebView(sender: UIRefreshControl){
     webViewArticle.reload()
     sender.endRefreshing()
@@ -110,10 +112,15 @@ extension WebViewController: UITextFieldDelegate{
     return true
   }
   
+  func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+    return isWebViewFinishLoading ? true : false
+  }
+  
   func textFieldDidBeginEditing(_ textField: UITextField) {
     linkTextField.text = String(urlOfContent!)
     textField.selectAll(nil)
   }
+  
   func textFieldDidEndEditing(_ textField: UITextField) {
     textField.becomeFirstResponder()
     textField.text = mainLink
@@ -132,6 +139,8 @@ extension WebViewController: WKNavigationDelegate{
     } else if webView.canGoBack{
       backButton.isEnabled = true
     }
+    
+    isWebViewFinishLoading = true
     progressView.isHidden = true
     linkTextField.text = mainLink
   }

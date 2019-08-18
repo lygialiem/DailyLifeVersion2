@@ -13,8 +13,9 @@ class ApiServices{
   //NewsApi Key (lygialam2911@gmail.com): d5b74e34a5d84c6e975e1cfe78f4803d
   //NewsApi Key (lygialong2911@gmail.com): 2173e6f5b41e4cb7b3892eb3ace459c5
   //NewsApi Key (lygialiem2911@gmail.com): 1ba7ebe1f90e4f3b87643898c85b84f3
+  //NewsApi Key (lygialinh2911@gmail.com): f1ebe3c2f76f41ca9c7c3fd0cf0c99e8
   let BASE_URL_NEWSAPI = "https://newsapi.org/v2/everything?q="
-  let API_KEY_NEWSAPI = "1ba7ebe1f90e4f3b87643898c85b84f3"
+  let API_KEY_NEWSAPI = "c35e4f5f0dd74f9ea0f3980484ec4d91"
   let TOPIC_NEWSAPI = ["World", "Politics", "Business", "Opinion", "Technology", "Science", "Arts", "Food", "Health", "Entertainment", "Style", "Travel", "Sport"]
   
   func getNewsApi(topic: String, completion: @escaping (NewsApi) -> Void){
@@ -32,9 +33,9 @@ class ApiServices{
     }.resume()
   }
   
-  func getMoreNewsApi(topic: String, page: Int, completion: @escaping (NewsApi) -> Void){
+  func getMoreNewsApi(topic: String, page: Int, size: Int, completion: @escaping (NewsApi) -> Void){
     
-    let totalUrl =  "\(BASE_URL_NEWSAPI)\(topic)&language=en&pageSize=20&apiKey=\(API_KEY_NEWSAPI)&sortBy=publishedAt&domains=vice.com&page=\(page)"
+    let totalUrl =  "\(BASE_URL_NEWSAPI)\(topic)&language=en&pageSize=\(size)&apiKey=\(API_KEY_NEWSAPI)&sortBy=publishedAt&domains=vice.com&page=\(page)"
     guard let url = URL(string: totalUrl) else {return}
     URLSession.shared.dataTask(with: url) {(dataApi, response, error) in
       

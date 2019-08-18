@@ -34,6 +34,7 @@ class ReadingCollectionViewCell: UICollectionViewCell {
     myTableView.dataSource = self
     myTableView.estimatedRowHeight = 400
     myTableView.rowHeight = UITableView.automaticDimension
+
   }
 }
 
@@ -58,6 +59,7 @@ extension ReadingCollectionViewCell: UITableViewDelegate, UITableViewDataSource{
     if indexPath.section == 0 {
       let cell = tableView.dequeueReusableCell(withIdentifier: "FirstCell", for: indexPath) as! FirstCell
       cell.configureContent(article: article)
+      cell.delegate = self
       
       return cell
     } else if indexPath.section == 1{
@@ -97,5 +99,11 @@ extension ReadingCollectionViewCell: UITableViewDelegate, UITableViewDataSource{
   }
 }
 
-
+extension ReadingCollectionViewCell: ReadingCellDelegate{
+  func didPressSeeMore(url: String) {
+    let webViewViewController = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WebViewVC") as! WebViewController
+    webViewViewController.urlOfContent = url
+    NotificationCenter.default.post(name: NSNotification.Name("NavigateToWebViewVCFromFirstCell"), object: nil, userInfo: ["data": webViewViewController])
+  }
+}
 
