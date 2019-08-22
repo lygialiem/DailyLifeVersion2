@@ -94,7 +94,7 @@ class MainVC: ButtonBarPagerTabStripViewController {
   }
   
   func setUpCoreLocation(){
-    
+    print("WILLAPEAR")
     if CLLocationManager.locationServicesEnabled(){
       manager.delegate = self
       manager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
@@ -115,6 +115,10 @@ class MainVC: ButtonBarPagerTabStripViewController {
         }
       }
     }
+  }
+  
+  func getApiWeather(){
+    
   }
   
   func configureButtonBar() {

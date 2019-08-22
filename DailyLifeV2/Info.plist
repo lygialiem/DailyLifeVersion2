@@ -52,5 +52,9 @@
 	<string>We need to get your Location Coordinates to show the Weather.</string>
 	<key>NSLocationUsageDescription</key>
 	<string></string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
 </dict>
 </plist>

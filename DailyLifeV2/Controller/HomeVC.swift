@@ -17,6 +17,10 @@ class HomeVC: UIViewController {
     configureOpenSideMenuByPanEdge()
   }
   
+  override var preferredStatusBarStyle: UIStatusBarStyle{
+    return .lightContent
+  }
+  
   func configureOpenSideMenuByPanEdge(){
     let edgePan = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(handleEdgePan(gesture:)))
     edgePan.edges = .left

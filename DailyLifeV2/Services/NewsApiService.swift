@@ -26,7 +26,7 @@ class ApiServices{
         let dataDecode = try JSONDecoder().decode(NewsApi.self, from: data)
         completion(dataDecode)
       } catch let jsonError{
-        debugPrint("LOI: ", jsonError)
+        debugPrint("API Key for NewsApi is Out Of Date")
       }
     }.resume()
   }

@@ -14,15 +14,19 @@ class WeatherVC: UIViewController {
   @IBOutlet var weatherTableView: UITableView!
   
   
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
     setupTableView()
     
-   
-//    navigationItem.titleView?.backgroundColor = .blue
-    navigationItem.title = "AAAAAAA"
-    
+    self.navigationController?.navigationBar.isHidden = true
+  
+  }
+
+  
+  override var preferredStatusBarStyle: UIStatusBarStyle{
+    return .lightContent
   }
   
   func  setupTableView(){
@@ -50,28 +54,43 @@ extension WeatherVC: UITableViewDelegate, UITableViewDataSource{
     default:
       return Int()
     }
-    
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     switch indexPath.section{
-    case 0:
-      let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath)
-      cell.backgroundColor = .blue
-      return cell
     case 1:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath)
-      cell.backgroundColor = .red
+
       return cell
     case 2:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath)
-      cell.backgroundColor = (indexPath.row % 2) == 0 ? .yellow : .green
+      
       return cell
     default:
       return UITableViewCell()
     }
   }
+  
+  func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    switch section {
+    case 0:
+      let header = tableView.dequeueReusableCell(withIdentifier: "header0")
+      return header
+    case 1:
+      let header = tableView.dequeueReusableCell(withIdentifier: "header1") as! WeatherHeader1_2
+      header.hourlyTitleHeader.text = "Hourly"
+  
+      return header
+    case 2:
+      let header = tableView.dequeueReusableCell(withIdentifier: "header2") as! WeatherHeader1_2
+      header.dailyTitleHeader.text = "Daily"
+      return header
+    default:
+      return UIView()
+    }
+  }
+  
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     switch indexPath.section {
@@ -81,34 +100,36 @@ extension WeatherVC: UITableViewDelegate, UITableViewDataSource{
       return 100
     case 2:
       return 50
-    case 3:
-      return 50
     default:
       return CGFloat()
     }
   }
   
   func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    if section  == 0 {
+    switch section {
+    case 0:
       return 150
-    } else if section == 1{
-      return 200
-    } else if section == 2{
-      return 30
-    } else if section == 3{
-      return 50
+    case 1:
+      return 20
+    case 2:
+      return 20
+    default:
+      return CGFloat()
     }
-    return CGFloat()
   }
   
   func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    if section == 1 {
+    switch section{
+    case 1:
       return "Hourly"
-    } else if section == 2{
+    case 2:
       return "Daily"
-    } else if section == 0 {
-      return "Forecast"
+    default:
+      return nil
     }
-    return nil
+  }
+  
+  func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    view.tintColor = .clear
   }
 }
