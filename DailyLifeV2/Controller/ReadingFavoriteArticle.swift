@@ -52,15 +52,8 @@ extension ReadingFavoriteArticle: UICollectionViewDelegateFlowLayout, UICollecti
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-    let size = CGSize(width: view.frame.width, height: 1000)
     
-    //1000 is the large arbitrary values which should be taken in case of very high amount of content
-    
-    let attributes = [NSAttributedString.Key.font: UIFont(name: "Helvetica Neue", size: 15)]
-    let estimatedFrame = NSString(string: articles[indexPath.row].contentCD!).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes as [NSAttributedString.Key : Any], context: nil)
-    return CGSize(width: view.frame.width, height: estimatedFrame.height + 350)
-
+    return CGSize(width: view.frame.width, height: 554)
   }
 }
 

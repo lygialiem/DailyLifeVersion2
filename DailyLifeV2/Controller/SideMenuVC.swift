@@ -9,13 +9,32 @@
 import UIKit
 
 class SideMenuVC: UIViewController {
+  
   @IBOutlet var menuCollectionView: UICollectionView!
+  @IBOutlet var visualEffectView: UIVisualEffectView!
+  @IBOutlet var myTextField: UITextField!
+  @IBOutlet var blurEffectView: UIVisualEffectView!
+  @IBOutlet var addView: UIView!
+  
+  var effect: UIVisualEffect!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     configureMenuCollectionView()
     closeSideMenuByPan()
+    configureAddView()
+    
+    let tap = UITapGestureRecognizer(target: self, action: #selector
+      (handleTapToDimissAddView))
+    self.visualEffectView.addGestureRecognizer(tap)
+  }
+  
+  func  configureAddView(){
+    effect = visualEffectView.effect
+    visualEffectView.isHidden = true
+    visualEffectView.effect = nil
+    addView.layer.cornerRadius = 10
   }
   
   func closeSideMenuByPan(){
@@ -24,11 +43,32 @@ class SideMenuVC: UIViewController {
     view.addGestureRecognizer(panEdge)
   }
   
- 
-  @IBAction func CloseMenuByPressed(_ sender: Any) {
-    NotificationCenter.default.post(name: NSNotification.Name("OpenOrCloseSideMenu"), object: nil)
+  func animateAddViewIn(){
+    visualEffectView.isHidden = false
+    self.view.addSubview(addView)
+    addView.frame.origin.x = (self.view.frame.width - addView.frame.width) / 2
+    addView.frame.origin.y = 20 + 44 + 30
+    addView.layer.borderColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+    addView.layer.borderWidth = 2
+    addView.alpha = 0
+    myTextField.becomeFirstResponder()
+    
+    UIView.animate(withDuration: 0.5) {
+      self.visualEffectView.effect = self.effect
+      self.addView.alpha = 1
+      self.addView.transform = CGAffineTransform.identity
+    }
   }
   
+  func animateAddViewOut(){
+    UIView.animate(withDuration: 0.5, animations: {
+      self.visualEffectView.effect = nil
+      self.addView.alpha = 0
+      self.visualEffectView.isHidden = true
+    }) { (success) in
+      self.addView.removeFromSuperview()
+    }
+  }
   
   func configureMenuCollectionView(){
     menuCollectionView.delegate = self
@@ -40,26 +80,39 @@ class SideMenuVC: UIViewController {
 extension SideMenuVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return ApiServices.instance.TOPIC_NEWSAPI.count
+    return ApiServices.instance.TOPIC_NEWSAPI.count + 1
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellOfSideMenu", for: indexPath) as! SideMenuCell
-    
-    cell.imageName = ApiServices.instance.TOPIC_NEWSAPI[indexPath.row]
-    cell.topicName = ApiServices.instance.TOPIC_NEWSAPI[indexPath.row]
-    
-    return cell
+    if indexPath.row == ApiServices.instance.TOPIC_NEWSAPI.count{
+      cell.imageName = "addImage"
+      cell.topicName = "Add"
+      return cell
+    } else {
+      cell.imageName = ApiServices.instance.TOPIC_NEWSAPI[indexPath.row]
+      cell.topicName = ApiServices.instance.TOPIC_NEWSAPI[indexPath.row]
+      return cell
+    }
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    return CGSize(width: 165, height: 200)
+    let width = (self.view.frame.width - 15 - 15 - 15) / 2
+    return CGSize(width: width, height: width * 40 / 33)
   }
   
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    return 15
+    
+  }
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    NotificationCenter.default.post(name: NSNotification.Name("MoveToTopic"), object: nil, userInfo: ["data": indexPath])
-    NotificationCenter.default.post(name: NSNotification.Name("OpenOrCloseSideMenu"), object: nil)
+    if indexPath.row ==
+      ApiServices.instance.TOPIC_NEWSAPI.count{
+      animateAddViewIn()
+    } else {
+      NotificationCenter.default.post(name: NSNotification.Name("MoveToTopic"), object: nil, userInfo: ["data": indexPath])
+      NotificationCenter.default.post(name: NSNotification.Name("OpenOrCloseSideMenu"), object: nil)
+    }
   }
 }
 
@@ -68,5 +121,40 @@ extension SideMenuVC{
   @objc func handleEdgePan(gesture: UIScreenEdgePanGestureRecognizer){
     NotificationCenter.default.post(name: NSNotification.Name("CloseSideMenyByEdgePan"), object: nil, userInfo: ["data": gesture])
     
+  }
+  
+  @objc func handleTapToDimissAddView(){
+    myTextField.resignFirstResponder()
+    animateAddViewOut()
+  }
+  
+}
+
+// Button Action:
+
+extension SideMenuVC{
+  
+  @IBAction func CloseMenuByPressed(_ sender: Any) {
+    NotificationCenter.default.post(name: NSNotification.Name("OpenOrCloseSideMenu"), object: nil)
+  }
+  
+  
+  @IBAction func AddNewTopicButton(_ sender: Any) {
+    animateAddViewIn()
+  }
+  
+  @IBAction func addButton(_ sender: Any) {
+    animateAddViewOut()
+    guard let textFieldString = myTextField.text else {return}
+    ApiServices.instance.TOPIC_NEWSAPI.append(textFieldString.capitalized)
+    let indexPath = IndexPath(row: ApiServices.instance.TOPIC_NEWSAPI.count - 1
+      , section: 0)
+    menuCollectionView.insertItems(at: [indexPath])
+    NotificationCenter.default.post(name: NSNotification.Name("reloadMainVC"), object: nil)
+  }
+  
+  @IBAction func cancleButton(_ sender: Any) {
+    myTextField.resignFirstResponder()
+    animateAddViewOut()
   }
 }

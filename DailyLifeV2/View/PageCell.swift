@@ -25,30 +25,33 @@ class PageCell: UICollectionViewCell {
     super.awakeFromNib()
     
     imageArticle.clipsToBounds = true
-    imageArticle.layer.cornerRadius = 7
+    imageArticle.layer.cornerRadius = 15
     imageArticle.layer.borderColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
     imageArticle.layer.borderWidth = 1
     
   }
   
-  func confiureCell(articles: Article){
+  func confiureCell(articles: Article?){
     DispatchQueue.main.async {
       self.articles = articles
-      guard let title = articles.title else {return}
-      self.titleArticle.text = title
       
-      guard let timePublished = articles.publishedAt else {return}
+      guard let title = articles?.title else {return}
+      self.titleArticle.text = title.capitalized
+      
+      guard let timePublished = articles?.publishedAt else {return}
       let isoFormatter = ISO8601DateFormatter()
       let timePublishedFormatter = isoFormatter.date(from: timePublished)
       self.timePublishedArticle.text = "\(timePublishedFormatter!)".replacingOccurrences(of: "+0000", with: "", options: .caseInsensitive, range: nil)
       
-      guard let image = articles.urlToImage else {return}
+      guard let image = articles?.urlToImage else {return}
       self.imageArticle.sd_setImage(with: URL(string: image))
     }
   }
+  
   @IBAction func shareButtonByPressed(_ sender: Any) {
     NotificationCenter.default.post(name: NSNotification.Name("shareAction"), object: nil, userInfo: ["data": self.articles!.url!])
   }
+  
   @IBAction func likeButtonByPress(_ sender: Any) {
     if isLikedStateButton{
       likeButton.setImage(UIImage(named: "greenLikeButton"), for: .normal)

@@ -44,17 +44,17 @@ class ReadingFavoriteReadingCollectionViewCell: UICollectionViewCell {
     
     let attributedOfString = [NSAttributedString.Key.foregroundColor: UIColor(white: 1, alpha: 1), NSAttributedString.Key.font: UIFont(name: "Helvetica Neue", size: 15)]
     
-    let stringContent = "\(article!.contentCD!)! - \(seeMore)"
+    let stringContent = "\(article!.contentCD!) - \(seeMore)"
     let completedConent = stringContent.replacingOccurrences(of: "[", with: "(", options: String.CompareOptions.literal, range: nil)
     let completedConent1 = completedConent.replacingOccurrences(of: "+", with: "", options: String.CompareOptions.literal, range: nil)
-    let completedConent2 = completedConent1.replacingOccurrences(of: "!", with: "", options: String.CompareOptions.literal, range: nil)
-    let finalContent = completedConent2.replacingOccurrences(of: "]", with: ")", options: String.CompareOptions.literal, range: nil)
+    let finalContent = completedConent1.replacingOccurrences(of: "]", with: ")", options: String.CompareOptions.literal, range: nil)
     let attributedString = NSMutableAttributedString(string: finalContent, attributes: attributedOfString as [NSAttributedString.Key : Any])
     
     guard let url = article?.urlCD else {return}
     attributedString.setAsLink(textToFind: seeMore, urlString: url)
     
     contentArticle.attributedText = attributedString
+    contentArticle.textViewDidChangeHeight()
   }
 }
 

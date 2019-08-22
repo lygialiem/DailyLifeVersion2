@@ -8,15 +8,43 @@
 
 import UIKit
 import CoreData
+import CoreLocation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
   var window: UIWindow?
-  
+  var location = CLLocationManager()
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    // Override point for customization after application launch.
+    
+    
+    location.requestWhenInUseAuthorization()
+//
+//    locationService.newestLocaton = {(location) in
+//      guard let location = location else {return}
+//      print("Location is: ", location)
+//      self.location = location
+//    }
+//
+//    locationService.statusUpdated = {[weak self] (status) in
+//      if status == .authorizedWhenInUse{
+//        self?.locationService.getLocation()
+//      }
+//    }
+//
+//    switch locationService.status{
+//    case .notDetermined:
+//      locationService.getPermission()
+//    case .authorizedWhenInUse:
+//      locationService.getLocation()
+//    case .denied:
+//      locationService.getPermission()
+//    case .restricted:
+//      locationService.getPermission()
+//    default:
+//      locationService.getPermission()
+//    }
     return true
   }
   

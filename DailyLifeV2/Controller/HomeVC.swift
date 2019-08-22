@@ -7,14 +7,12 @@ class HomeVC: UIViewController {
 
   var isSideMenuOpen = false
   @IBOutlet var sideLeadingConstraint: NSLayoutConstraint!
-  
- 
+
   override func viewDidLoad() {
     super.viewDidLoad()
     sideLeadingConstraint.constant = -self.view.frame.width
     NotificationCenter.default.addObserver(self, selector: #selector(openSideMenu), name: Notification.Name("OpenOrCloseSideMenu"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(handleCloseSideMenuByPan(notification:)), name: NSNotification.Name("CloseSideMenyByEdgePan"), object: nil)
-    
 
     configureOpenSideMenuByPanEdge()
   }

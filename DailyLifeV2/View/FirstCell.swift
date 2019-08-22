@@ -6,15 +6,11 @@ protocol ReadingCellDelegate{
 
 class FirstCell: UITableViewCell {
   
-  
   @IBOutlet var contentArticle: UITextView!
   @IBOutlet var imageArticle: UIImageView!
   @IBOutlet var authorArticle: UILabel!
   @IBOutlet var titleArticle: UILabel!
-  
-  var article: Article?
-  var indexPathOfDidSelectedArticle: IndexPath?
-  
+
   let seeMore = "See more"
   var delegate: ReadingCellDelegate?
   
@@ -22,40 +18,36 @@ class FirstCell: UITableViewCell {
     super.awakeFromNib()
     
     selectionStyle = UITableViewCell.SelectionStyle.none
-    
+
   }
   
   func configureContent(article: Article?){
     
     guard let urlToImage = article?.urlToImage else {return}
-    imageArticle.sd_setImage(with: URL(string: urlToImage), completed: nil)
-    titleArticle.text = article?.title?.capitalized
-    authorArticle.text = article?.author
+    self.imageArticle.sd_setImage(with: URL(string: urlToImage), completed: nil)
+    self.titleArticle.text = article?.title?.capitalized
+    self.authorArticle.text = article?.author
     
-    contentArticle.layer.cornerRadius = 7
-    contentArticle.delegate = self
+    self.contentArticle.layer.cornerRadius = 7
+    self.contentArticle.delegate = self
     
     let attributedOfString = [NSAttributedString.Key.foregroundColor: UIColor(white: 1, alpha: 1), NSAttributedString.Key.font: UIFont(name: "Helvetica Neue", size: 15)]
     
-    let stringContent = "\(article!.content!)! - \(seeMore)"
+    let stringContent = "\(article!.content!) - \(self.seeMore)"
     let completedConent = stringContent.replacingOccurrences(of: "[", with: "(", options: String.CompareOptions.literal, range: nil)
     let completedConent1 = completedConent.replacingOccurrences(of: "+", with: "", options: String.CompareOptions.literal, range: nil)
-    let completedConent2 = completedConent1.replacingOccurrences(of: "!", with: "", options: String.CompareOptions.literal, range: nil)
-    let finalContent = completedConent2.replacingOccurrences(of: "]", with: ")", options: String.CompareOptions.literal, range: nil)
+    let finalContent = completedConent1.replacingOccurrences(of: "]", with: ")", options: String.CompareOptions.literal, range: nil)
     let attributedString = NSMutableAttributedString(string: finalContent, attributes: attributedOfString as [NSAttributedString.Key : Any])
     
     guard let url = article?.url else {return}
-    attributedString.setAsLink(textToFind: seeMore, urlString: url)
+    attributedString.setAsLink(textToFind: self.seeMore, urlString: url)
     
-    contentArticle.attributedText = attributedString
+    self.contentArticle.attributedText = attributedString
   }
 }
-
 extension FirstCell:  UITextViewDelegate{
   func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-    
     delegate?.didPressSeeMore(url: URL.absoluteString)
-    
     return false
   }
 }

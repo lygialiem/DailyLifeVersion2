@@ -20,7 +20,7 @@ class WebViewController: UIViewController {
   
   
   var urlOfContent: String?
-  let mainLink = "www.vice.com"
+  let mainLink = "www.cnn.com"
   var isWebViewFinishLoading = false
   
   override func viewDidLoad() {
@@ -44,6 +44,7 @@ class WebViewController: UIViewController {
     refreshController.addTarget(self, action: #selector(pullToRefreshWebView(sender:)), for: .valueChanged)
     refreshController.tintColor = #colorLiteral(red: 0.1203624085, green: 0.9065318704, blue: 0.7143992782, alpha: 1)
     refreshController.backgroundColor = .black
+
     webViewArticle.scrollView.addSubview(refreshController)
     
     let urlContent = URL(string: urlOfContent!)
@@ -82,6 +83,7 @@ class WebViewController: UIViewController {
       webViewArticle.goBack()
     }
   }
+  
   @IBAction func fowardButton(_ sender: Any) {
     if webViewArticle.canGoForward{
       webViewArticle.goForward()
@@ -131,15 +133,24 @@ extension WebViewController: WKNavigationDelegate{
   func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
     linkTextField.text = webView.url?.absoluteString
     progressView.isHidden = false
+    
+    switch (webView.canGoBack, webView.canGoForward){
+    case (false, false):
+      backButton.isEnabled = false
+      fowardButton.isEnabled = false
+    case (false, true):
+      backButton.isEnabled = false
+      fowardButton.isEnabled = true
+    case (true, false):
+      backButton.isEnabled = true
+      fowardButton.isEnabled = false
+    case (true, true):
+      backButton.isEnabled = true
+      fowardButton.isEnabled = true
+    }
   }
   
   func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-    if webView.canGoForward{
-      fowardButton.isEnabled = true
-    } else if webView.canGoBack{
-      backButton.isEnabled = true
-    }
-    
     isWebViewFinishLoading = true
     progressView.isHidden = true
     linkTextField.text = mainLink

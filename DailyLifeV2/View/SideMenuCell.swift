@@ -19,7 +19,6 @@ class SideMenuCell: UICollectionViewCell {
       imageSideMenu.layer.cornerRadius = 15
       imageSideMenu.layer.borderWidth = 1
       imageSideMenu.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-    
       imageSideMenu.image = UIImage(named: imageName)
     }
   }
@@ -27,6 +26,7 @@ class SideMenuCell: UICollectionViewCell {
   var topicName: String!{
     didSet{
     topic.text = topicName
+      
     }
   }
 }

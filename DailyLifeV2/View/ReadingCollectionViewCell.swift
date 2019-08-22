@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol ReadingCollectionViewCellDelegate{
-  func movoWebViewController(url: String)
+  func movoWebViewController(url: String?)
 }
 
 class ReadingCollectionViewCell: UICollectionViewCell {
@@ -19,7 +19,8 @@ class ReadingCollectionViewCell: UICollectionViewCell {
   
   var delegate: ReadingCollectionViewCellDelegate?
   var article: Article?
-  var articlesOfConcern = [Article]()
+  var articlesOfConcern = [Article?]()
+  var fontSize: CGFloat?
   
   override func awakeFromNib() {
     super.awakeFromNib()
@@ -27,18 +28,23 @@ class ReadingCollectionViewCell: UICollectionViewCell {
     setupMyTableView()
     
   }
-  
+ 
   func setupMyTableView(){
     
     myTableView.delegate = self
     myTableView.dataSource = self
-    myTableView.estimatedRowHeight = 400
+    myTableView.estimatedRowHeight = 1000
     myTableView.rowHeight = UITableView.automaticDimension
-
   }
 }
 
 extension ReadingCollectionViewCell: UITableViewDelegate, UITableViewDataSource{
+  
+override  func prepareForReuse() {
+    super.prepareForReuse()
+ 
+  myTableView.reloadData()
+  }
   
   func numberOfSections(in tableView: UITableView) -> Int {
     return 2
@@ -55,16 +61,14 @@ extension ReadingCollectionViewCell: UITableViewDelegate, UITableViewDataSource{
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    
     if indexPath.section == 0 {
       let cell = tableView.dequeueReusableCell(withIdentifier: "FirstCell", for: indexPath) as! FirstCell
-      cell.configureContent(article: article!)
+      cell.configureContent(article: self.article!)
       cell.delegate = self
-      
       return cell
     } else if indexPath.section == 1{
       let cell = tableView.dequeueReusableCell(withIdentifier: "SecondCell", for: indexPath) as! SecondCell
-      cell.configureContent(article: articlesOfConcern[indexPath.row])
+      cell.configureContent(article: (articlesOfConcern[indexPath.row]))
       return cell
     }
     return UITableViewCell()
@@ -93,8 +97,7 @@ extension ReadingCollectionViewCell: UITableViewDelegate, UITableViewDataSource{
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     if indexPath.section == 1{
-      delegate?.movoWebViewController(url: articlesOfConcern[indexPath.row].url!)
-   
+      delegate?.movoWebViewController(url: articlesOfConcern[indexPath.row]?.url)
     }
   }
 }
@@ -106,4 +109,3 @@ extension ReadingCollectionViewCell: ReadingCellDelegate{
     NotificationCenter.default.post(name: NSNotification.Name("NavigateToWebViewVCFromFirstCell"), object: nil, userInfo: ["data": webViewViewController])
   }
 }
-

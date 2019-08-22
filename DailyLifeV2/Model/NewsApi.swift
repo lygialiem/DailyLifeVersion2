@@ -15,7 +15,6 @@ struct NewsApi: Decodable, Equatable, Hashable{
 }
 
 struct Article: Decodable, Equatable, Hashable{
-
   var source: Source?
   var author: String?
   var title: String?

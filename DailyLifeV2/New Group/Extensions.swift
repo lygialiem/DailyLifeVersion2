@@ -17,7 +17,6 @@ extension NSMutableAttributedString {
 }
 
 extension UILabel {
-  
   func startBlink() {
     UIView.animate(withDuration: 1.5,
                    delay:0.0,
@@ -43,5 +42,17 @@ public extension Array where Element: Hashable {
   func uniqued() -> [Element] {
     var seen = Set<Element>()
     return self.filter { seen.insert($0).inserted }
+  }
+}
+
+extension UITextView{
+  func textViewDidChangeHeight() {
+    self.translatesAutoresizingMaskIntoConstraints = true
+    let fixedWidth = self.frame.size.width
+    self.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+    let newSize = self.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+    var newFrame = self.frame
+    newFrame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
+    self.frame = newFrame
   }
 }
