@@ -20,7 +20,7 @@ class WebViewController: UIViewController {
   
   
   var urlOfContent: String?
-  let mainLink = "www.cnn.com"
+  let mainLink = "Daily Life"
   var isWebViewFinishLoading = false
   
   override func viewDidLoad() {

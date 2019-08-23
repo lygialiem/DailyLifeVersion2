@@ -56,3 +56,18 @@ extension UITextView{
     self.frame = newFrame
   }
 }
+
+extension Int{
+  func formatEpochTime(dateFormatType: String) -> String{
+    let date = NSDate(timeIntervalSince1970: TimeInterval(self))
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = dateFormatType
+    return dateFormatter.string(from: date as Date)
+  }
+}
+
+extension Double{
+   func roundInt() -> Int{
+    return Int(self.rounded())
+  }
+}

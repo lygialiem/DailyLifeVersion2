@@ -26,7 +26,7 @@ class MainVC: ButtonBarPagerTabStripViewController {
   
   var newestLocaton: ((CLLocationCoordinate2D?) -> Void)?
   var statusUpdated: ((CLAuthorizationStatus?) -> Void)?
-  var dataResponseWeather: ((WeatherInfo)-> Void)?
+  var dataResponseWeather: ((CurrentlyDarkSkyApi)-> Void)?
   let manager = CLLocationManager()
   var status: CLAuthorizationStatus{
     return CLLocationManager.authorizationStatus()
@@ -40,6 +40,8 @@ class MainVC: ButtonBarPagerTabStripViewController {
   }
   
   override func viewDidLoad() {
+    
+    weatherContainerConstraint.constant = -(self.view.frame.height - 20 - self.view.safeAreaInsets.top - 30)
     configureButtonBar()
     super.viewDidLoad()
     
@@ -94,7 +96,6 @@ class MainVC: ButtonBarPagerTabStripViewController {
   }
   
   func setUpCoreLocation(){
-    print("WILLAPEAR")
     if CLLocationManager.locationServicesEnabled(){
       manager.delegate = self
       manager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
@@ -102,6 +103,7 @@ class MainVC: ButtonBarPagerTabStripViewController {
       
       self.newestLocaton = {(location) in
         guard let latitude = location?.latitude, let longitude = location?.longitude else {return}
+        
         LocationService.instance.getWeatherApi(latitude: latitude, longitude: longitude) { (dataResponse) in
           self.dataResponseWeather?(dataResponse)
           guard let temper = dataResponse.currently?.temperature else {
@@ -109,16 +111,11 @@ class MainVC: ButtonBarPagerTabStripViewController {
           }
           DispatchQueue.main.async {
             self.temperatureButton.setTitle("\(round(temper * 10) / 10)°C", for: .normal)
-            self.navigationController?.navigationBar.layoutIfNeeded()
           }
           self.manager.stopUpdatingLocation()
         }
       }
     }
-  }
-  
-  func getApiWeather(){
-    
   }
   
   func configureButtonBar() {
@@ -168,55 +165,30 @@ class MainVC: ButtonBarPagerTabStripViewController {
     return pageVCArray
   }
   
-  
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if let weatherContainer = segue.destination as? WeatherContainer{
       self.dataResponseWeather = {(dataResponseWeather) in
-        
-        guard let latitude = dataResponseWeather.latitude,
-          let longitude = dataResponseWeather.longitude,
-          let time = dataResponseWeather.currently?.time,
-          let summary = dataResponseWeather.currently?.summary,
-          let temperature = dataResponseWeather.currently?.temperature,
-          let apparentTemperature = dataResponseWeather.currently?.apparentTemperature,
-          let humidity = dataResponseWeather.currently?.humidity,
-          let pressure = dataResponseWeather.currently?.pressure,
-          let stormDis = dataResponseWeather.currently?.nearestStormDistance,
-          let precipIntensity = dataResponseWeather.currently?.precipIntensity,
-          let precipType = dataResponseWeather.currently?.precipType,
-          let precipProbability = dataResponseWeather.currently?.precipProbability,
-          let dewPoint = dataResponseWeather.currently?.dewPoint,
-          let winBearing = dataResponseWeather.currently?.windBearing,
-          let ozone = dataResponseWeather.currently?.ozone,
-          let cloudCover = dataResponseWeather.currently?.cloudCover,
-          let visibility = dataResponseWeather.currently?.visibility,
-          let uvIndex = dataResponseWeather.currently?.uvIndex,
-          let icon = dataResponseWeather.currently?.icon
-          else { return }
-        
-        
+        weatherContainer.latitude = dataResponseWeather.latitude
+        weatherContainer.longitude = dataResponseWeather.longitude
+        weatherContainer.time = dataResponseWeather.currently?.time
+        weatherContainer.summary = dataResponseWeather.currently?.summary
+        weatherContainer.temperature = dataResponseWeather.currently?.temperature
+        weatherContainer.apparentTemperature = dataResponseWeather.currently?.apparentTemperature
+        weatherContainer.humidity = dataResponseWeather.currently?.humidity
+        weatherContainer.pressure = dataResponseWeather.currently?.pressure
+        weatherContainer.nearestStormDistance = dataResponseWeather.currently?.nearestStormDistance
+        weatherContainer.precipIntensity = dataResponseWeather.currently?.precipIntensity
+        weatherContainer.precipType = dataResponseWeather.currently?.precipType
+        weatherContainer.precipProbability = dataResponseWeather.currently?.precipProbability
+        weatherContainer.dewPoint = dataResponseWeather.currently?.dewPoint
+        weatherContainer.windBearing = dataResponseWeather.currently?.windSpeed
+        weatherContainer.ozone = dataResponseWeather.currently?.ozone
+        weatherContainer.cloudCover = dataResponseWeather.currently?.cloudCover
+        weatherContainer.visibility = dataResponseWeather.currently?.visibility
+        weatherContainer.uvIndex = dataResponseWeather.currently?.uvIndex
+        weatherContainer.icon = dataResponseWeather.currently?.icon
         DispatchQueue.main.async {
-          
           weatherContainer.detailWeatherTableView.dataSource = weatherContainer
-          weatherContainer.latitude = latitude
-          weatherContainer.longitude = longitude
-          weatherContainer.time = time
-          weatherContainer.summary = summary
-          weatherContainer.temperature = temperature
-          weatherContainer.apparentTemperature = apparentTemperature
-          weatherContainer.humidity = humidity
-          weatherContainer.pressure = pressure
-          weatherContainer.nearestStormDistance = stormDis
-          weatherContainer.precipIntensity = precipIntensity
-          weatherContainer.precipType = precipType
-          weatherContainer.precipProbability = precipProbability
-          weatherContainer.dewPoint = dewPoint
-          weatherContainer.windBearing = winBearing
-          weatherContainer.ozone = ozone
-          weatherContainer.cloudCover = cloudCover
-          weatherContainer.visibility = visibility
-          weatherContainer.uvIndex = uvIndex
-          weatherContainer.icon = icon
           weatherContainer.detailWeatherTableView.reloadData()
         }
       }

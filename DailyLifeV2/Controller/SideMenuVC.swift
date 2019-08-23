@@ -80,20 +80,20 @@ class SideMenuVC: UIViewController {
 extension SideMenuVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return ApiServices.instance.TOPIC_NEWSAPI.count + 1
+    return ApiServices.instance.TOPIC_NEWSAPI.count
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CellOfSideMenu", for: indexPath) as! SideMenuCell
-    if indexPath.row == ApiServices.instance.TOPIC_NEWSAPI.count{
-      cell.imageName = "addImage"
-      cell.topicName = "Add"
-      return cell
-    } else {
+//    if indexPath.row == ApiServices.instance.TOPIC_NEWSAPI.count{
+//      cell.imageName = "addImage"
+//      cell.topicName = "Add"
+//      return cell
+//    } else {
       cell.imageName = ApiServices.instance.TOPIC_NEWSAPI[indexPath.row]
       cell.topicName = ApiServices.instance.TOPIC_NEWSAPI[indexPath.row]
       return cell
-    }
+//    }
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -106,13 +106,13 @@ extension SideMenuVC: UICollectionViewDelegate, UICollectionViewDataSource, UICo
     
   }
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    if indexPath.row ==
-      ApiServices.instance.TOPIC_NEWSAPI.count{
-      animateAddViewIn()
-    } else {
+//    if indexPath.row ==
+//      ApiServices.instance.TOPIC_NEWSAPI.count{
+//      animateAddViewIn()
+//    } else {
       NotificationCenter.default.post(name: NSNotification.Name("MoveToTopic"), object: nil, userInfo: ["data": indexPath])
       NotificationCenter.default.post(name: NSNotification.Name("OpenOrCloseSideMenu"), object: nil)
-    }
+//    }
   }
 }
 
@@ -127,7 +127,6 @@ extension SideMenuVC{
     myTextField.resignFirstResponder()
     animateAddViewOut()
   }
-  
 }
 
 // Button Action:

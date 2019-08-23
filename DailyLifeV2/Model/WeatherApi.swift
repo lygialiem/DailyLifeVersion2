@@ -8,14 +8,13 @@
 
 import Foundation
 
-struct WeatherInfo: Decodable{
-  var currently: Data?
+struct CurrentlyDarkSkyApi: Decodable{
+  var currently: Currently?
   var latitude: Double?
   var longitude: Double?
 }
 
-struct Data: Decodable {
-  
+struct Currently: Decodable {
   var precipType: String?
   var summary: String?
   var icon: String?

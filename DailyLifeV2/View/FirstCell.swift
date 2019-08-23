@@ -33,7 +33,9 @@ class FirstCell: UITableViewCell {
     
     let attributedOfString = [NSAttributedString.Key.foregroundColor: UIColor(white: 1, alpha: 1), NSAttributedString.Key.font: UIFont(name: "Helvetica Neue", size: 15)]
     
-    let stringContent = "\(article!.content!) - \(self.seeMore)"
+    guard let content = article?.content else {return}
+    
+    let stringContent = "\(content) - \(self.seeMore)"
     let completedConent = stringContent.replacingOccurrences(of: "[", with: "(", options: String.CompareOptions.literal, range: nil)
     let completedConent1 = completedConent.replacingOccurrences(of: "+", with: "", options: String.CompareOptions.literal, range: nil)
     let finalContent = completedConent1.replacingOccurrences(of: "]", with: ")", options: String.CompareOptions.literal, range: nil)

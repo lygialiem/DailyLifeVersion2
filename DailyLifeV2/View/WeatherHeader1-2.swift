@@ -8,19 +8,41 @@
 
 import UIKit
 
-class WeatherHeader1_2: UITableViewCell {
+protocol moveToWebVC {
+  func moveToWebVCFromWeatherVC(url: String)
+}
 
+class WeatherHeader1_2: UITableViewCell {
+  
   @IBOutlet var dailyTitleHeader: UILabel!
   @IBOutlet var hourlyTitleHeader: UILabel!
+  @IBOutlet var summaryTitleHeader: UILabel!
+  @IBOutlet var detailTitleHeader: UILabel!
+  
+  @IBOutlet var darkSkyBtn: UIButton!
+  @IBOutlet var apixuBtn: UIButton!
+  @IBOutlet var seatchBtn: UIButton!
+  
+  var delegate: moveToWebVC?
+  
   override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
+    super.awakeFromNib()
+    self.selectionStyle = .none
+  }
+  
+  @IBAction func darkSkyBtnByPressed(_ sender: Any) {
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
+      self.movoToWebViewController(linkToMove: "https://darksky.net/dev")
+    
+  }
+  
+  @IBAction func apixuBtnByPressed(_ sender: Any) {
+    
+    movoToWebViewController(linkToMove: "https://www.apixu.com/")
+  }
+  
+  func movoToWebViewController(linkToMove: String){
+    
+    self.delegate?.moveToWebVCFromWeatherVC(url: linkToMove )
+  }
 }

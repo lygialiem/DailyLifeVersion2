@@ -12,7 +12,7 @@ class ApiServices{
   static let instance = ApiServices()
   
   let BASE_URL_NEWSAPI = "https://newsapi.org/v2/everything?q="
-  let API_KEY_NEWSAPI = "0c9bc0126af947cc85311a95510845ee"
+  let API_KEY_NEWSAPI = "ab5c87c8ff8e44868c747bfe043deff0"
   var TOPIC_NEWSAPI = ["World", "Politics", "Business", "Opinion", "Technology", "Science", "Arts", "Food", "Health", "Entertainment", "Style", "Travel", "Sport"]
   
   func getMoreNewsApi(topic: String, page: Int, numberOfArticles: Int, completion: @escaping (NewsApi) -> Void){
@@ -26,7 +26,7 @@ class ApiServices{
         let dataDecode = try JSONDecoder().decode(NewsApi.self, from: data)
         completion(dataDecode)
       } catch let jsonError{
-        debugPrint("API Key for NewsApi is Out Of Date")
+        debugPrint("API Key for NewsApi is Out Of Date: ", jsonError)
       }
     }.resume()
   }

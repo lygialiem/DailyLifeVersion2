@@ -88,7 +88,7 @@ extension WeatherContainer: UITableViewDelegate, UITableViewDataSource{
       
     case 0:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
-      let date = Calendar.current.date(byAdding: .calendar, value: time!, to: Date())
+      let date = Calendar.current.date(byAdding: .calendar, value: time ?? 0, to: Date())
       let dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "MMMM dd, yyyy"
       if let datee = date {
@@ -111,108 +111,108 @@ extension WeatherContainer: UITableViewDelegate, UITableViewDataSource{
     case 2:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(round(latitude! * 10) / 10)°"
+      cell.descriptionWeather.text = "\(round((latitude ?? 0) * 1000) / 1000)°"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 3:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(round(longitude! * 10) / 10 )°"
+      cell.descriptionWeather.text = "\(round((longitude ?? 0) * 1000) / 1000)°"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 4:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(round(temperature! * 10) / 10)°C"
+      cell.descriptionWeather.text = "\(round(temperature ?? 0))°C"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 5:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(humidity! * 100) %"
+      cell.descriptionWeather.text = "\(((humidity ?? 0) * 100).roundInt()) %"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 6:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(pressure!) hPa"
+      cell.descriptionWeather.text = "\(pressure ?? 0) hPa"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 7:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(nearestStormDistance!) km"
+      cell.descriptionWeather.text = "\(0) km"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 8:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(precipIntensity!) mm/h"
+      cell.descriptionWeather.text = "\(precipIntensity ?? 0) mm/h"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 9:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = precipType!.capitalized
+      cell.descriptionWeather.text = "\(precipType ?? "None")"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 10:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(round(precipProbability! * 1000) / 10) % "
+      cell.descriptionWeather.text = "\(((precipProbability ?? 0) * 100).roundInt()) % "
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 11:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(dewPoint!)°C"
+      cell.descriptionWeather.text = "\(dewPoint ?? 0)°C"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 12:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(windBearing!)°"
+      cell.descriptionWeather.text = "\(windBearing ?? 0)°"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 13:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(ozone!) DU"
+      cell.descriptionWeather.text = "\(ozone ?? 0) DU"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 14:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(cloudCover! * 100) %"
+      cell.descriptionWeather.text = "\(((cloudCover ?? 0) * 100).roundInt()) %"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 15:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(visibility!) km"
+      cell.descriptionWeather.text = "\(visibility ?? 0) km"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
       
     case 16:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell0", for: indexPath) as! WeatherContainerCell
       cell.titleWeather.text = LocationService.instance.weatherTitles[indexPath.row].capitalized
-      cell.descriptionWeather.text = "\(uvIndex!)"
+      cell.descriptionWeather.text = "\(uvIndex ?? 0)"
       cell.iconWeather.image = UIImage(named: "\(indexPath.row)")?.withRenderingMode(.alwaysTemplate)
       return cell
-    
+      
     default:
       break
     }
@@ -220,7 +220,6 @@ extension WeatherContainer: UITableViewDelegate, UITableViewDataSource{
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-  return UITableView.automaticDimension
-}
-//°C
+    return UITableView.automaticDimension
+  }
 }
