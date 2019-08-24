@@ -48,7 +48,6 @@ class WeatherVC: UIViewController {
           self.weatherTableView.reloadData()
           self.addCityBtn.isHidden = true
           self.addCityLabel.isHidden = true
-          
         }
       }
     }
@@ -104,7 +103,6 @@ class WeatherVC: UIViewController {
     DispatchQueue.main.async {
       self.weatherTableView.reloadData()
     }
-    
     self.searchTextfield.resignFirstResponder()
     animationOut()
   }
@@ -151,7 +149,7 @@ class WeatherVC: UIViewController {
     do{
       try manager.save()
     }catch{
-      debugPrint("Can Save Country Name To CoreData")
+      debugPrint("Can't Save Country Name To CoreData")
     }
   }
 }
@@ -201,7 +199,7 @@ extension WeatherVC: UITableViewDelegate, UITableViewDataSource{
       return cell
     case 3:
       let cell = tableView.dequeueReusableCell(withIdentifier: "cell3", for: indexPath) as! WeatherRow3
-      cell.summary.text = "Today: \(forecastData?.current?.condition?.text ?? "") currently. The high temperature will be \((forecastData?.forecast?.forecastday?[0]?.day?.maxtemp_c ?? 0).roundInt())ºC. Cloudy tonight with a low temperature of \(String(describing: (forecastData?.forecast?.forecastday?[0]?.day?.mintemp_c ?? 0).roundInt()))ºc"
+      cell.summary.text = "Today: \(forecastData?.current?.condition?.text ?? "") currently. The high temperature will be \((forecastData?.forecast?.forecastday?[0]?.day?.maxtemp_c ?? 0).roundInt())ºC. Cloudy tonight with a low temperature of \(String(describing: (forecastData?.forecast?.forecastday?[0]?.day?.mintemp_c ?? 0).roundInt()))ºC"
       return cell
       
     case 4:
@@ -280,7 +278,7 @@ extension WeatherVC: UITableViewDelegate, UITableViewDataSource{
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     switch indexPath.section {
     case 0:
-      return 150
+      return 170
     case 1:
       return 100
     case 2:
@@ -339,7 +337,8 @@ extension WeatherVC: UITextFieldDelegate{
       }
     }
     
-    LocationService.instance.getCountryForecastApi(nameOfCountry: "\((textField.text ?? "").replacingOccurrences(of: " ", with: "%20"))", completion: {(forecastData) in
+    LocationService.instance.getCountryForecastApi(nameOfCountry: "\(textField.text ?? "")", completion: {(forecastData) in
+      
       DispatchQueue.main.async {
         self.saveCountryNameToCoreDate(nameToSave: textField.text)
         self.forecastData = forecastData
@@ -358,12 +357,10 @@ extension WeatherVC: UITextFieldDelegate{
         self.addCityBtn.isHidden = true
       }
     }
-
+    
     animationOut()
     textField.resignFirstResponder()
-    let indexPath = IndexPath(row: 1, section: 1)
-//    self.weatherTableView.scrollToRow(at: indexPath, at: .none, animated: true)
-    
+    self.weatherTableView.scrollRectToVisible(CGRect(x: 0, y: 0, width: weatherTableView.frame.width, height: weatherTableView.frame.height), animated: true)
     return true
   }
 }

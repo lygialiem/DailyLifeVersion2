@@ -16,9 +16,17 @@ class WeatherContainerCell: UITableViewCell {
   
   
   override func awakeFromNib() {
-        super.awakeFromNib()
-  
+    super.awakeFromNib()
+    
     
     self.selectionStyle = .none
-    }
+    iconWeather.tintColor = .white
+  }
+  
+  func setData(_ text: String, _ text2: String, _ image: UIImage) {
+    descriptionWeather.text = text
+    titleWeather.text = text2
+    iconWeather.image = image
+  }
+  
 }

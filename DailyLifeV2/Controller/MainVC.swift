@@ -101,18 +101,20 @@ class MainVC: ButtonBarPagerTabStripViewController {
       manager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
       manager.startUpdatingLocation()
       
-      self.newestLocaton = {(location) in
+      self.newestLocaton = { [weak self] (location) in
+        guard let wSelf = self else { return }
+        
         guard let latitude = location?.latitude, let longitude = location?.longitude else {return}
         
         LocationService.instance.getWeatherApi(latitude: latitude, longitude: longitude) { (dataResponse) in
-          self.dataResponseWeather?(dataResponse)
+          wSelf.dataResponseWeather?(dataResponse)
           guard let temper = dataResponse.currently?.temperature else {
             return
           }
           DispatchQueue.main.async {
-            self.temperatureButton.setTitle("\(round(temper * 10) / 10)°C", for: .normal)
+            wSelf.temperatureButton.setTitle("\(round(temper * 10) / 10)°C", for: .normal)
           }
-          self.manager.stopUpdatingLocation()
+          wSelf.manager.stopUpdatingLocation()
         }
       }
     }
@@ -144,14 +146,21 @@ class MainVC: ButtonBarPagerTabStripViewController {
   override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
     for i in 0..<ApiServices.instance.TOPIC_NEWSAPI.count{
       let pageVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "PageControllerID") as! PageVC
+      
       pageVC.menuBarTitle = ApiServices.instance.TOPIC_NEWSAPI[i]
       DispatchQueue.main.async {
         ApiServices.instance.getMoreNewsApi(topic: ApiServices.instance.TOPIC_NEWSAPI[i], page: 3,numberOfArticles: 10) { (dataApi) in
+          guard let dataApi = dataApi else {return}
           pageVC.articlesOfConcern = dataApi.articles
         }
       }
       
+      
       ApiServices.instance.getMoreNewsApi(topic: ApiServices.instance.TOPIC_NEWSAPI[i], page: 1, numberOfArticles: 20) {(dataApi) in
+        guard let dataApi = dataApi else {
+          pageVC.newsFeedCV.isHidden = true
+          return
+        }
         pageVC.articles = dataApi.articles
         if i == 0 {
           DispatchQueue.main.async {

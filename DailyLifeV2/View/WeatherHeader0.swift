@@ -14,19 +14,29 @@ class WeatherHeader0: UITableViewCell {
   @IBOutlet var sunMoonImage: UIImageView!
   @IBOutlet var temperature: UILabel!
   @IBOutlet var currentDay: UILabel!
+  @IBOutlet var regionCountry: UILabel!
   
-    override func awakeFromNib() {
-        super.awakeFromNib()
-      self.selectionStyle = .none
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-    }
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    self.selectionStyle = .none
+  }
+  
+  override func setSelected(_ selected: Bool, animated: Bool) {
+    super.setSelected(selected, animated: animated)
+    
+  }
   
   func configureCell(forecast: ForecastApi?){
-    guard let cityZone = forecast?.location?.name, let description = forecast?.current?.condition?.text, let temperature = forecast?.current?.temp_c, let currentDay = forecast?.current?.last_updated_epoch else {return}
+    guard let cityZone = forecast?.location?.name, let description = forecast?.current?.condition?.text, let temperature = forecast?.current?.temp_c, let currentDay = forecast?.current?.last_updated_epoch,
+      let region = forecast?.location?.region,
+      let country = forecast?.location?.country
+      else {return}
+    if region == ""{
+      self.regionCountry.text = "\(country)"
+    } else {
+       self.regionCountry.text = "\(region), \(country)"
+    }
+    
     
     self.cityZone.text = cityZone.capitalized
     

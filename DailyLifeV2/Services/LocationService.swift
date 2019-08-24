@@ -34,7 +34,7 @@ class LocationService{
       }.resume()
   }
   
-  func getCountryForecastApi(nameOfCountry: String, completion: @escaping (ForecastApi) -> Void, completionCoordinate: @escaping (HourlyDarkSkyApi) -> Void){
+  func getCountryForecastApi(nameOfCountry: String, completion: @escaping (ForecastApi?) -> Void, completionCoordinate: @escaping (HourlyDarkSkyApi) -> Void){
     let url = "http://api.apixu.com/v1/forecast.json?key=\(APIXU_KEY)&q=\(nameOfCountry.replacingOccurrences(of: " ", with: "%20"))&days=7"
     guard let urlRequest = URL(string: url) else {return}
     
@@ -63,20 +63,6 @@ class LocationService{
       }
       }.resume()
   }
-//
-//  func loadLocalJson(filename fileName: String, completion: @escaping ([Info]) -> Void) {
-//    if let url = Bundle.main.url(forResource: fileName, withExtension: "json") {
-//      do {
-//        let data = try Data(contentsOf: url)
-//        let jsonData = try  JSONDecoder().decode([Info].self, from: data)
-//        completion(jsonData)
-//      } catch {
-//        print("error:\(error)")
-//      }
-//    }
-//
-//  }
-  
 
   
   func getIconJson(completion: @escaping ([Info]) -> Void){
@@ -88,9 +74,8 @@ class LocationService{
        let dataDecoded = try JSONDecoder().decode([Info].self, from: data)
         completion(dataDecoded)
 
-      }catch let jsonError{
-        debugPrint("ErrorCallAPi: \(String(describing: error)), ParseJsonError: \(jsonError)")
-      }
+      }catch{
+        debugPrint("ErrorCallAPi: \(String(describing: error))")      }
     }.resume()
     
   }

@@ -12,10 +12,11 @@ import XLPagerTabStrip
 class PageVC: UIViewController, IndicatorInfoProvider {
   
   @IBOutlet var newsFeedCV: UICollectionView!
-  var articles = [Article?]()
+  var articles = [Article]()
   var menuBarTitle: String = ""
   var currentPage = 2
-  var articlesOfConcern = [Article?]()
+  var articlesOfConcern = [Article]()
+  @IBOutlet var outOfDateApi: UILabel!
   
   let refreshControl = UIRefreshControl()
   
@@ -29,8 +30,6 @@ class PageVC: UIViewController, IndicatorInfoProvider {
     NotificationCenter.default.addObserver(self, selector: #selector(handleShareAction(notification:)), name: NSNotification.Name("shareAction"), object: nil)
   
   }
-  
-  
   
   @objc func handleShareAction(notification: Notification){
     let url = notification.userInfo!["data"]
@@ -54,8 +53,9 @@ class PageVC: UIViewController, IndicatorInfoProvider {
   var indexOfNewArticle = 0
   @objc func handleRefreshControl(){
     ApiServices.instance.getMoreNewsApi(topic: menuBarTitle, page: 1, numberOfArticles: 20) { (dataApi) in
+      guard let dataApi = dataApi else {return}
       for index in 0..<dataApi.articles.count{
-        if dataApi.articles[index].title != self.articles[index]?.title{
+        if dataApi.articles[index].title != self.articles[index].title{
           self.articles.insert(dataApi.articles[index], at: self.indexOfNewArticle)
           self.indexOfNewArticle += 1
         }
@@ -92,7 +92,7 @@ extension PageVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
         cell.isLikedStateButton = false
       } else{
         for i in 0..<favoriteArticlesCD.count {
-          if articles[indexPath.row]?.title == favoriteArticlesCD[i].titleCD{
+          if articles[indexPath.row].title == favoriteArticlesCD[i].titleCD{
             cell.likeButton.setImage(UIImage(named: "redLikeButton"), for: .normal)
             cell.isLikedStateButton = true
           }else {
@@ -118,17 +118,20 @@ extension PageVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
   }
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let readingVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReadingVC") as! ReadingVC
+    guard let storyboard = self.storyboard else { return }
+    
+    let readingVC = storyboard.instantiateViewController(withIdentifier: "ReadingVC") as! ReadingVC
     readingVC.articlesOfConcern = self.articlesOfConcern
     readingVC.articles = self.articles
     readingVC.indexPathOfDidSelectedArticle = indexPath
     
     readingVC.title = menuBarTitle
     readingVC.navigationItem.backBarButtonItem?.title = ""
+    readingVC.view.layoutIfNeeded()
+    readingVC.readingCollectionView.reloadData()
     
     self.navigationController?.pushViewController(readingVC, animated: true)
-    
-    
+
   }
   
   func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -137,6 +140,7 @@ extension PageVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
       let numberOfPage = 5
       if currentPage <= numberOfPage{
         ApiServices.instance.getMoreNewsApi(topic: menuBarTitle , page: currentPage, numberOfArticles: 20 ) { (dataApi) in
+          guard let dataApi = dataApi else {return}
           for article in dataApi.articles{
             self.articles.append(article)
           }

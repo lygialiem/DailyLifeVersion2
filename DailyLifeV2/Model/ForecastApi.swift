@@ -13,10 +13,17 @@ struct ForecastApi: Decodable{
   var location: Location?
   var current: Current?
   var forecast: Forecast?
+  var error: Error?
+}
+
+struct Error: Decodable{
+  var code: Int?
+  var message: String?
 }
 
 struct Location: Decodable{
   var name: String?
+  var region : String?
   var country: String?
   var lat: Double?
   var lon: Double?
@@ -83,3 +90,5 @@ struct ConditionDay: Decodable{
   var icon: String?
   var code: Int?
 }
+
+

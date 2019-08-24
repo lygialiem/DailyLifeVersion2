@@ -1,6 +1,6 @@
 import UIKit
 
-protocol ReadingCellDelegate{
+protocol ReadingCellDelegate: class {
   func didPressSeeMore(url: String)
 }
 
@@ -12,10 +12,11 @@ class FirstCell: UITableViewCell {
   @IBOutlet var titleArticle: UILabel!
 
   let seeMore = "See more"
-  var delegate: ReadingCellDelegate?
+  weak var delegate: ReadingCellDelegate?
   
   override func awakeFromNib() {
     super.awakeFromNib()
+
     
     selectionStyle = UITableViewCell.SelectionStyle.none
 

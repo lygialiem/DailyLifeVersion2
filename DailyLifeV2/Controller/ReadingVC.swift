@@ -16,14 +16,26 @@ class ReadingVC: UIViewController {
   
   var articles = [Article?]()
   var indexPathOfDidSelectedArticle: IndexPath?
-  var articlesOfConcern = [Article?]()
+  var articlesOfConcern = [Article]()
+  
+  deinit {
+    print("===========")
+    NotificationCenter.default.removeObserver(self)
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     setupReadingCollectionView()
     
-    NotificationCenter.default.addObserver(self, selector: #selector(handleMoveToWebViewViewController(notification:)) , name: NSNotification.Name("NavigateToWebViewVCFromFirstCell"), object: nil)    
+    self.view.layoutIfNeeded()
+    self.readingCollectionView.reloadData()
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(handleMoveToWebViewViewController(notification:)) , name: NSNotification.Name("NavigateToWebViewVCFromFirstCell"), object: nil)
+
+    guard let indexPath = indexPathOfDidSelectedArticle else {return}
+    readingCollectionView.scrollToItem(at: indexPath
+      , at: .centeredHorizontally, animated: false)
   }
 
   @objc func handleMoveToWebViewViewController(notification: Notification){
@@ -35,9 +47,7 @@ class ReadingVC: UIViewController {
     readingCollectionView.delegate = self
     readingCollectionView.dataSource = self
     readingCollectionView.isPagingEnabled = true
-    guard let indexPath = indexPathOfDidSelectedArticle else {return}
-    readingCollectionView.scrollToItem(at: indexPath
-      , at: .centeredHorizontally, animated: false)
+    
   }
 }
 
@@ -51,7 +61,7 @@ extension ReadingVC: UICollectionViewDelegateFlowLayout, UICollectionViewDelegat
     
     readingCell.delegate = self
     readingCell.article = articles[indexPath.row]
-    readingCell.articlesOfConcern = articlesOfConcern as! [Article]
+    readingCell.articlesOfConcern = articlesOfConcern 
     return readingCell
   }
   
@@ -61,7 +71,8 @@ extension ReadingVC: UICollectionViewDelegateFlowLayout, UICollectionViewDelegat
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
-    return CGSize(width: self.view.frame.width - self.view.safeAreaInsets.left - self.view.safeAreaInsets.right, height: self.readingCollectionView.bounds.height)
+    print(self.readingCollectionView.frame.height)
+    return CGSize(width: self.view.frame.width, height: self.readingCollectionView.frame.height)
   }
 }
 

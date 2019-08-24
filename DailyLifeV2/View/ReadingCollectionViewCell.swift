@@ -19,7 +19,7 @@ class ReadingCollectionViewCell: UICollectionViewCell {
   
   var delegate: ReadingCollectionViewCellDelegate?
   var article: Article?
-  var articlesOfConcern = [Article?]()
+  var articlesOfConcern = [Article]()
   var fontSize: CGFloat?
   
   override func awakeFromNib() {
@@ -34,6 +34,7 @@ class ReadingCollectionViewCell: UICollectionViewCell {
     myTableView.delegate = self
     myTableView.dataSource = self
     myTableView.estimatedRowHeight = 1000
+//    myTableView.register(UINib.init(nibName: "TestCell", bundle: nil), forCellReuseIdentifier: "TestCell")
     myTableView.rowHeight = UITableView.automaticDimension
   }
 }
@@ -68,7 +69,9 @@ override  func prepareForReuse() {
       return cell
     } else if indexPath.section == 1{
       let cell = tableView.dequeueReusableCell(withIdentifier: "SecondCell", for: indexPath) as! SecondCell
-      cell.configureContent(article: (articlesOfConcern[indexPath.row]))
+     
+         cell.configureContent(article: (self.articlesOfConcern[indexPath.row]))
+      
       return cell
     }
     return UITableViewCell()
@@ -97,7 +100,7 @@ override  func prepareForReuse() {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     if indexPath.section == 1{
-      delegate?.movoWebViewController(url: articlesOfConcern[indexPath.row]?.url)
+      delegate?.movoWebViewController(url: articlesOfConcern[indexPath.row].url)
     }
   }
 }
