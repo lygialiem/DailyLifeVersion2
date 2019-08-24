@@ -35,7 +35,6 @@ extension ForecastHourTableViewCell: UICollectionViewDelegateFlowLayout, UIColle
   func collectionView(_ collectionView: UICollectionView, cellForItemAt
     indexPath: IndexPath) -> UICollectionViewCell {
     
-    
     let icon = hourlyData?.hourly?.data?[indexPath.row]?.icon ?? ""
     let time = Int((hourlyData?.hourly?.data?[indexPath.row]?.time ?? 0).formatEpochTime(dateFormatType: "HH"))
     

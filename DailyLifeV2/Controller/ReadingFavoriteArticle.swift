@@ -53,7 +53,7 @@ extension ReadingFavoriteArticle: UICollectionViewDelegateFlowLayout, UICollecti
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
-    return CGSize(width: view.frame.width, height: 554)
+    return CGSize(width: view.frame.width, height: self.myCollectionView.frame.height)
   }
 }
 

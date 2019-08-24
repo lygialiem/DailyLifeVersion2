@@ -12,23 +12,44 @@ import CoreLocation
 class WeatherVC: UIViewController {
   
   @IBOutlet var weatherTableView: UITableView!
+  @IBOutlet var visualEffectView: UIVisualEffectView!
+  @IBOutlet var searchView: UIView!
+  @IBOutlet var searchTextfield: UITextField!
+  @IBOutlet var addCityBtn: UIButton!
+  @IBOutlet var addCityLabel: UILabel!
+  
   var forecastData: ForecastApi?
   var hourlyData: HourlyDarkSkyApi?
+  var effect: UIVisualEffect!
+  var textOfTextfield = "Ho Chi Minh"
   
   override func viewWillAppear(_ animated: Bool) {
-    self.navigationController?.navigationBar.isHidden = true 
-    LocationService.instance.getCountryForecastApi(nameOfCountry: "Ho Chi Minh", completion: { (forecastData) in
-      self.forecastData = forecastData
-      DispatchQueue.main.async {
-        self.weatherTableView.dataSource = self
-        self.weatherTableView.reloadData()
+    self.navigationController?.navigationBar.isHidden = true
+    
+    CoreDataServices.instance.fetchCoreDateCountryName {(countryName) in
+      guard let name = countryName.first?.nameCD else {
+        self.weatherTableView.dataSource = nil
+        self.addCityBtn.isHidden = false
+        self.addCityLabel.isHidden = false
+        return
       }
-      
-    }) { (hourlyData) in
-      self.hourlyData = hourlyData
-      DispatchQueue.main.async {
-        self.weatherTableView.dataSource = self
-        self.weatherTableView.reloadData()
+      LocationService.instance.getCountryForecastApi(nameOfCountry: "\(name.replacingOccurrences(of: " ", with: "%20"))", completion: { (forecastData) in
+        self.forecastData = forecastData
+        DispatchQueue.main.async {
+          self.weatherTableView.dataSource = self
+          self.weatherTableView.reloadData()
+          self.addCityBtn.isHidden = true
+          self.addCityLabel.isHidden = true
+        }
+      }) {(hourlyData) in
+        self.hourlyData = hourlyData
+        DispatchQueue.main.async {
+          self.weatherTableView.dataSource = self
+          self.weatherTableView.reloadData()
+          self.addCityBtn.isHidden = true
+          self.addCityLabel.isHidden = true
+          
+        }
       }
     }
   }
@@ -37,11 +58,34 @@ class WeatherVC: UIViewController {
     super.viewDidLoad()
     
     setupTableView()
-    
     self.navigationController?.navigationBar.isHidden = true
+    setupSearchCityView()
+    setupTapToDimiss()
+    
+    self.searchTextfield.delegate = self
     
   }
   
+  @IBAction func addCityBtnAction(_ sender: Any) {
+    animationIn()
+  }
+  func setupTapToDimiss(){
+    let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+    self.visualEffectView.addGestureRecognizer(tap)
+  }
+  
+  @objc func handleTap(){
+    self.searchTextfield.resignFirstResponder()
+    animationOut()
+  }
+  
+  func setupSearchCityView(){
+    effect = visualEffectView.effect
+    visualEffectView.isHidden = true
+    visualEffectView.effect = nil
+    searchView.clipsToBounds = true
+    searchView.layer.cornerRadius = 15
+  }
   
   override var preferredStatusBarStyle: UIStatusBarStyle{
     return .lightContent
@@ -52,7 +96,64 @@ class WeatherVC: UIViewController {
     weatherTableView.delegate = self
     weatherTableView.dataSource = nil
   }
+  @IBAction func searchBtn(_ sender: Any) {
+    animationIn()
+  }
+  @IBAction func seatchCityBtn(_ sender: Any) {
+    self.textOfTextfield = searchTextfield.text!
+    DispatchQueue.main.async {
+      self.weatherTableView.reloadData()
+    }
+    
+    self.searchTextfield.resignFirstResponder()
+    animationOut()
+  }
   
+  @IBAction func cancelSearchCityBtn(_ sender: Any) {
+    searchTextfield.resignFirstResponder()
+    animationOut()
+  }
+  
+  func animationIn(){
+    visualEffectView.isHidden = false
+    self.view.addSubview(searchView)
+    searchView.frame.origin.x = (self.view.frame.width - searchView.frame.width) / 2
+    searchView.frame.origin.y = 20 + 44 + 30
+    searchView.layer.borderColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+    searchView.layer.borderWidth = 2
+    searchView.alpha = 1
+    searchTextfield.becomeFirstResponder()
+    
+    UIView.animate(withDuration: 0.5) {
+      self.visualEffectView.effect = self.effect
+      self.searchView.alpha = 1
+      self.searchView.transform = CGAffineTransform.identity
+    }
+  }
+  
+  func animationOut(){
+    UIView.animate(withDuration: 0.5, animations: {
+      self.searchView.alpha = 0
+      self.visualEffectView.effect = nil
+      self.visualEffectView.isHidden = true
+    }) {(success) in
+      self.searchView.removeFromSuperview()
+    }
+  }
+  
+  func saveCountryNameToCoreDate(nameToSave: String?){
+    let delegate = UIApplication.shared.delegate as! AppDelegate
+    let manager = delegate.persistentContainer.viewContext
+    let coreData = CountrySearching(context: manager)
+    
+    coreData.nameCD = nameToSave
+    
+    do{
+      try manager.save()
+    }catch{
+      debugPrint("Can Save Country Name To CoreData")
+    }
+  }
 }
 
 extension WeatherVC: UITableViewDelegate, UITableViewDataSource{
@@ -217,5 +318,52 @@ extension WeatherVC: moveToWebVC{
     webVC.urlOfContent = url
     self.navigationController?.navigationBar.isHidden = false
     self.navigationController?.pushViewController(webVC, animated: true)
+  }
+}
+
+extension WeatherVC: UITextFieldDelegate{
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    
+    //delete country name in CoreData:
+    CoreDataServices.instance.fetchCoreDateCountryName { (countryName) in
+      guard (countryName.first?.nameCD) != nil else {return}
+      self.addCityLabel.isHidden = true
+      self.addCityBtn.isHidden = true
+      guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
+      let managedContext = appDelegate.persistentContainer.viewContext
+      managedContext.delete(countryName.first!)
+      do{
+        try managedContext.save()
+      }catch{
+        print("Cannot Save")
+      }
+    }
+    
+    LocationService.instance.getCountryForecastApi(nameOfCountry: "\((textField.text ?? "").replacingOccurrences(of: " ", with: "%20"))", completion: {(forecastData) in
+      DispatchQueue.main.async {
+        self.saveCountryNameToCoreDate(nameToSave: textField.text)
+        self.forecastData = forecastData
+        self.weatherTableView.dataSource = self
+        self.weatherTableView.reloadData()
+        self.addCityLabel.isHidden = true
+        self.addCityBtn.isHidden = true
+      }
+    }) { (hourlyData) in
+      
+      DispatchQueue.main.async {
+        self.hourlyData = hourlyData
+        self.weatherTableView.dataSource = self
+        self.weatherTableView.reloadData()
+        self.addCityLabel.isHidden = true
+        self.addCityBtn.isHidden = true
+      }
+    }
+
+    animationOut()
+    textField.resignFirstResponder()
+    let indexPath = IndexPath(row: 1, section: 1)
+//    self.weatherTableView.scrollToRow(at: indexPath, at: .none, animated: true)
+    
+    return true
   }
 }

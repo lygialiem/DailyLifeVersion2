@@ -11,6 +11,9 @@ import UIKit
 class WeatherRow3: UITableViewCell {
 
   @IBOutlet var summary: UILabel!
+  
+  
+  
   override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

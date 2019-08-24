@@ -67,7 +67,26 @@ extension Int{
 }
 
 extension Double{
-   func roundInt() -> Int{
+  func roundInt() -> Int{
     return Int(self.rounded())
+  }
+}
+
+extension UIImageView{
+  func checkCurrentTime(imageDay: String, imageNight: String, timeDay: Int, timeNight: Int){
+    let date = Date()
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "HH"
+    let curretnDate = Int(dateFormatter.string(from: date))
+    
+    if curretnDate! >= timeDay && curretnDate! < timeNight{
+      DispatchQueue.main.async {
+        self.image = UIImage(named: imageDay)
+      }
+    }else {
+      DispatchQueue.main.async {
+        self.image = UIImage(named: imageNight)
+      }
+    }
   }
 }
